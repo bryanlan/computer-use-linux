@@ -160,8 +160,8 @@ async fn list_gnome_shell_introspect_windows() -> Result<Vec<WindowInfo>> {
 
 pub async fn list_extension_windows() -> Result<Vec<WindowInfo>> {
     let json = call_extension_json("ListWindows").await?;
-    let mut windows: Vec<WindowInfo> =
-        serde_json::from_str(&json).context("Linux Computer Use GNOME Shell extension returned invalid JSON")?;
+    let mut windows: Vec<WindowInfo> = serde_json::from_str(&json)
+        .context("Linux Computer Use GNOME Shell extension returned invalid JSON")?;
     for window in &mut windows {
         window.backend = GNOME_SHELL_EXTENSION_BACKEND.to_string();
     }
@@ -488,10 +488,9 @@ async fn call_extension_json(method: &str) -> Result<String> {
     )
     .await
     .context("failed to create Linux Computer Use GNOME Shell extension proxy")?;
-    let json: String = proxy
-        .call(method, &())
-        .await
-        .with_context(|| format!("Linux Computer Use GNOME Shell extension {method} call failed"))?;
+    let json: String = proxy.call(method, &()).await.with_context(|| {
+        format!("Linux Computer Use GNOME Shell extension {method} call failed")
+    })?;
     Ok(json)
 }
 
@@ -513,7 +512,9 @@ async fn activate_extension_window(window_id: u64) -> Result<()> {
         .call("ActivateWindow", &(window_id))
         .await
         .with_context(|| {
-            format!("Linux Computer Use GNOME Shell extension ActivateWindow failed for {window_id}")
+            format!(
+                "Linux Computer Use GNOME Shell extension ActivateWindow failed for {window_id}"
+            )
         })?;
     if ok {
         Ok(())

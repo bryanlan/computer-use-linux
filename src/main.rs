@@ -69,9 +69,7 @@ async fn main() -> Result<()> {
         Some("screenshot-area") => {
             let (args, output_path) = split_output_arg(std::env::args().skip(2).collect())?;
             if args.len() != 4 {
-                bail!(
-                    "usage: computer-use-linux screenshot-area X Y WIDTH HEIGHT [--output FILE]"
-                );
+                bail!("usage: computer-use-linux screenshot-area X Y WIDTH HEIGHT [--output FILE]");
             }
             let area = screenshot::ScreenshotArea {
                 x: parse_arg(&args[0], "X")?,
@@ -87,9 +85,7 @@ async fn main() -> Result<()> {
         Some("screenshot-window") => {
             let (args, output_path) = split_output_arg(std::env::args().skip(2).collect())?;
             if args.len() != 1 {
-                bail!(
-                    "usage: computer-use-linux screenshot-window WINDOW_ID [--output FILE]"
-                );
+                bail!("usage: computer-use-linux screenshot-window WINDOW_ID [--output FILE]");
             }
             let window_id = args[0]
                 .parse::<u64>()

@@ -68,7 +68,8 @@ pub async fn setup_window_targeting_report() -> WindowTargetingSetupReport {
         "Linux Computer Use GNOME Shell extension files were installed, but enabling the extension failed. Enable it with gnome-extensions after GNOME Shell sees the new extension."
             .to_string()
     } else if windows_error.is_none() {
-        "Linux Computer Use GNOME Shell extension is active and window targeting is available.".to_string()
+        "Linux Computer Use GNOME Shell extension is active and window targeting is available."
+            .to_string()
     } else {
         "Linux Computer Use GNOME Shell extension files were installed and enable was requested, but GNOME Shell is not serving the window-control DBus API yet. Log out and back in, then retry setup_window_targeting."
             .to_string()
