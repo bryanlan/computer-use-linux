@@ -79,6 +79,37 @@ SEMANTIC_SELECTORS = {
 
 OBJECT_REF_SELECTORS = SEMANTIC_SELECTORS | {"element_identifier"}
 
+READ_ONLY_TOOLS = {
+    "doctor",
+    "list_apps",
+    "get_app_state",
+    "list_windows",
+    "focused_window",
+}
+
+DESTRUCTIVE_MUTATING_TOOLS = {
+    "click",
+    "drag",
+    "press_key",
+    "type_text",
+    "perform_action",
+    "set_value",
+}
+
+NON_DESTRUCTIVE_MUTATING_TOOLS = EXPECTED_TOOLS - READ_ONLY_TOOLS - DESTRUCTIVE_MUTATING_TOOLS
+
+IDEMPOTENT_TOOLS = READ_ONLY_TOOLS | {
+    "setup_accessibility",
+    "setup_window_targeting",
+    "activate_window",
+}
+
+OPEN_WORLD_TOOLS = EXPECTED_TOOLS - {
+    "doctor",
+    "setup_accessibility",
+    "setup_window_targeting",
+}
+
 
 class McpClient:
     def __init__(self, binary: pathlib.Path):
@@ -172,6 +203,25 @@ def schema_properties(tool: dict[str, Any]) -> set[str]:
     return set(properties)
 
 
+def assert_tool_annotations(tool: dict[str, Any]) -> None:
+    name = tool["name"]
+    annotations = tool.get("annotations")
+    if not isinstance(annotations, dict):
+        raise AssertionError(f"{name} is missing MCP tool annotations")
+
+    expected = {
+        "readOnlyHint": name in READ_ONLY_TOOLS,
+        "destructiveHint": name in DESTRUCTIVE_MUTATING_TOOLS,
+        "idempotentHint": name in IDEMPOTENT_TOOLS,
+        "openWorldHint": name in OPEN_WORLD_TOOLS,
+    }
+    for key, value in expected.items():
+        if annotations.get(key) is not value:
+            raise AssertionError(
+                f"{name} annotation {key}={annotations.get(key)!r}, expected {value!r}"
+            )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--binary", default="target/debug/computer-use-linux")
@@ -184,6 +234,13 @@ def main() -> int:
         raise AssertionError(f"binary does not exist: {binary}")
 
     version = package_version(repo)
+    annotation_partition = READ_ONLY_TOOLS | NON_DESTRUCTIVE_MUTATING_TOOLS | DESTRUCTIVE_MUTATING_TOOLS
+    if annotation_partition != EXPECTED_TOOLS:
+        raise AssertionError(
+            "tool annotation classes do not cover the expected MCP tool set: "
+            f"missing={EXPECTED_TOOLS - annotation_partition}, extra={annotation_partition - EXPECTED_TOOLS}"
+        )
+
     client = McpClient(binary)
     try:
         initialize = client.request(
@@ -211,6 +268,7 @@ def main() -> int:
         for required in [
             "Begin every turn that uses Computer Use by calling get_app_state",
             "Use list_windows/focused_window before targeted keyboard input",
+            "Tools with readOnlyHint=false may mutate local desktop or application state",
             "refuse targeted input if focus cannot be verified",
         ]:
             if required not in instructions:
@@ -229,6 +287,7 @@ def main() -> int:
                 raise AssertionError(f"unexpected dangerous tool name exposed: {name}")
             description = tool.get("description") or ""
             assert_no_injection_text(f"{name} description", description)
+            assert_tool_annotations(tool)
             props = schema_properties(tool)
             if "env" in props or "shell" in props or "command" in props:
                 raise AssertionError(f"{name} exposes a raw process-control parameter: {sorted(props)}")

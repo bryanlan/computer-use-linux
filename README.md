@@ -47,6 +47,19 @@ The crate was extracted from [`codex-desktop-linux`](https://github.com/avifenes
 **Navigation**
 - `activate_window` — focus a window by `window_id`, `pid`, `app_id`, `wm_class`, `title`, or terminal selectors
 
+### MCP safety contract
+
+`computer-use-linux` is not a read-only data source. It can observe the local desktop and, when a mutating tool is called, can change real application state. The `tools/list` response includes MCP `ToolAnnotations` so hosts can surface this distinction before invocation:
+
+| Class | Tools | Contract |
+| --- | --- | --- |
+| Read-only observation | `doctor`, `list_apps`, `list_windows`, `focused_window`, `get_app_state` | `readOnlyHint=true`; may reveal app, window, accessibility, and screenshot contents. `get_app_state` may trigger the desktop screenshot portal prompt. |
+| Local setup mutators | `setup_accessibility`, `setup_window_targeting` | `readOnlyHint=false`, `destructiveHint=false`, `idempotentHint=true`; modifies user desktop configuration by enabling accessibility or installing/enabling the GNOME window-targeting extension. |
+| UI state mutators | `activate_window`, `scroll` | `readOnlyHint=false`, `destructiveHint=false`; changes focus or scroll position in the live desktop. |
+| Desktop action mutators | `click`, `drag`, `press_key`, `type_text`, `perform_action`, `set_value` | `readOnlyHint=false`, `destructiveHint=true`, `openWorldHint=true`; can trigger arbitrary actions in whatever local application is targeted. |
+
+Annotations are safety hints, not an authorization system. MCP hosts should still ask the user before calls that could submit, delete, send, purchase, overwrite, or otherwise commit state.
+
 The binary also exposes the same capabilities from the CLI for scripting and debugging:
 
 ```
@@ -242,6 +255,7 @@ Computer-use tooling is, by definition, a privilege-escalation surface. The thre
 - **AT-SPI exposes window contents to any client on your session bus.** Enabling the AT-SPI bridge (`setup_accessibility`) is a prerequisite for this binary; it's also what screen readers use, and it shares the same trust boundary.
 - **The GNOME Shell extension** is loaded only into your user's GNOME Shell, runs in the Shell's JS sandbox, and exposes a single DBus interface on the user session bus. It does not request any extra permissions.
 - **No network.** This binary opens no sockets, makes no outbound connections, and ships no telemetry.
+- **Mutating tools are explicit.** The MCP tool list annotates read-only versus mutating tools, and CI fails if the published tool annotations drift from the table above. Treat those annotations as hints; the host is still responsible for user approval and policy.
 
 If you're running this on a shared workstation, set `ydotoold`'s socket permissions to `0600` (the default) and audit which processes on your user can `connect()` to it.
 

@@ -2,6 +2,12 @@
 
 NPM wrapper for the `computer-use-linux` MCP server.
 
+Security note: this server can control the local Linux desktop. Tools such as
+`click`, `type_text`, `press_key`, `perform_action`, and `set_value` are
+mutating and can change real application state. The MCP tool list includes
+`ToolAnnotations` so hosts can distinguish read-only observation from mutating
+desktop actions.
+
 ```bash
 npm install -g @agent-sh/computer-use-linux
 computer-use-linux doctor

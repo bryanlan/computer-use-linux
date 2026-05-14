@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI release gates for locked Rust checks, clippy, tests, private rustdoc,
   cargo publish dry-run, cargo audit, npm wrapper smoke tests, and an MCP
   protocol/safety contract check.
+- MCP `ToolAnnotations` that mark read-only observation tools separately from
+  mutating desktop-control tools.
 
 ### Changed
 - Switch the COSMIC protocol dependency from a pinned Git revision to the
@@ -33,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add npm install instructions and fix the prebuilt binary install example to
   match the release assets, which are raw binaries with `.sha256` files rather
   than tar archives.
+- Document the mutating-tool safety contract for MCP hosts and npm users.
 
 ## [0.2.0] - 2026-05-14
 
