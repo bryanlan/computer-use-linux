@@ -15,7 +15,16 @@ Cargo.lock.bak
 # Local environment overrides
 .env
 .env.local
+.env.publish
+.npmrc
+.secrets/
 
 # Screenshot scratch
 /tmp-screenshots/
 dist/
+
+# npm wrapper postinstall artifacts from local smoke tests
+/npm/bin/computer-use-linux-linux-*
+/npm/bin/computer-use-linux-darwin-*
+/npm/bin/computer-use-linux-win32-*
+/npm/bin/computer-use-linux-cosmic

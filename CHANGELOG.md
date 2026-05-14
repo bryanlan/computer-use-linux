@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-05-14
+
+### Added
+- npm wrapper package (`@agent-sh/computer-use-linux`) for Node.js users. It
+  downloads and verifies the matching GitHub release binaries at install time.
+- Tag-driven GitHub Actions publishing for crates.io and npm using repository
+  secrets.
+- CI release gates for locked Rust checks, clippy, tests, private rustdoc,
+  cargo publish dry-run, cargo audit, npm wrapper smoke tests, and an MCP
+  protocol/safety contract check.
+
+### Changed
+- Switch the COSMIC protocol dependency from a pinned Git revision to the
+  published `cosmic-protocols` `0.2.0` crate so `computer-use-linux` can be
+  published on crates.io.
+- Ship the `computer-use-linux-cosmic` helper alongside prebuilt release
+  binaries and install it from `install.sh` so COSMIC window targeting works
+  outside `cargo install`.
+- Keep the MCP `serverInfo.version` aligned with the Cargo package version.
+
+### Documentation
+- Add Hermes Agent CLI setup commands and clarify the registered MCP tool
+  names / toolset.
+- Add npm install instructions and fix the prebuilt binary install example to
+  match the release assets, which are raw binaries with `.sha256` files rather
+  than tar archives.
+
 ## [0.2.0] - 2026-05-14
 
 ### Added
@@ -86,6 +113,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validated against GNOME 50.1 on Wayland (Ubuntu 25.10).
 - KDE / Sway / Hyprland untested — see README support matrix.
 
-[Unreleased]: https://github.com/avifenesh/computer-use-linux/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/avifenesh/computer-use-linux/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/avifenesh/computer-use-linux/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/avifenesh/computer-use-linux/releases/tag/v0.2.0
 [0.1.0]: https://github.com/avifenesh/computer-use-linux/releases/tag/v0.1.0

@@ -2,11 +2,9 @@
 
 Linux desktop control for any MCP host — AT-SPI accessibility, GNOME Shell window targeting, portal screenshots, and ydotool input. Wayland-first, X11 best-effort.
 
-<!-- Badges (enable once CI / crates.io publish lands):
 [![CI](https://github.com/avifenesh/computer-use-linux/actions/workflows/ci.yml/badge.svg)](https://github.com/avifenesh/computer-use-linux/actions/workflows/ci.yml)
 [![crates.io](https://img.shields.io/crates/v/computer-use-linux.svg)](https://crates.io/crates/computer-use-linux)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
--->
 
 ## What this is
 
@@ -95,8 +93,14 @@ computer-use-linux doctor | jq .readiness
 You handle the system-level pieces (`ydotoold`, AT-SPI, the GNOME extension) yourself.
 
 ```bash
-cargo install --git https://github.com/avifenesh/computer-use-linux
+cargo install computer-use-linux
 computer-use-linux doctor
+```
+
+For unreleased changes from `main`, install directly from Git:
+
+```bash
+cargo install --git https://github.com/avifenesh/computer-use-linux
 ```
 
 Then, as needed:
@@ -108,20 +112,32 @@ computer-use-linux setup                      # gsettings AT-SPI bridge
 computer-use-linux setup-window-targeting     # GNOME Shell extension
 ```
 
-### Option C — prebuilt binaries
+### Option C — npm wrapper (binary download)
 
-Static x86_64 / aarch64 builds are published with each tag. Each archive ships a `.sha256` next to it.
+Good for users who already have Node.js and want a no-Rust install. The npm package downloads and verifies the matching GitHub release binaries during install.
+
+```bash
+npm install -g @agent-sh/computer-use-linux
+computer-use-linux doctor
+```
+
+You will still need `ydotoold` running and AT-SPI enabled (run `computer-use-linux setup` and the systemd commands above).
+
+### Option D — prebuilt binaries
+
+Linux x86_64 / aarch64 builds are published with each tag. Each binary ships a `.sha256` next to it.
 
 - Releases: <https://github.com/avifenesh/computer-use-linux/releases>
 
 ```bash
-curl -L -o computer-use-linux.tar.gz \
-  https://github.com/avifenesh/computer-use-linux/releases/latest/download/computer-use-linux-x86_64-unknown-linux-gnu.tar.gz
-curl -L -o computer-use-linux.tar.gz.sha256 \
-  https://github.com/avifenesh/computer-use-linux/releases/latest/download/computer-use-linux-x86_64-unknown-linux-gnu.tar.gz.sha256
-sha256sum -c computer-use-linux.tar.gz.sha256
-tar xzf computer-use-linux.tar.gz
-install -m 0755 computer-use-linux ~/.local/bin/
+target=x86_64-unknown-linux-gnu
+for binary in computer-use-linux computer-use-linux-cosmic; do
+  asset="$binary-$target"
+  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/latest/download/$asset"
+  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/latest/download/$asset.sha256"
+  sha256sum -c "$asset.sha256"
+  install -m 0755 "$asset" "$HOME/.local/bin/$binary"
+done
 ```
 
 You will still need `ydotoold` running and AT-SPI enabled (run `computer-use-linux setup` and the systemd commands above).
@@ -132,7 +148,7 @@ The binary speaks the `rmcp` 2024-11-05 stdio protocol. Pass `mcp` as the only a
 
 ### Codex Desktop (Linux build)
 
-The Linux build of Codex Desktop already bundles this binary as a plugin. You don't need to wire it up manually — the plugin definition lives in [`codex-desktop-linux`](https://github.com/avifenesh/codex-desktop-linux) under its `plugins/` directory and is enabled by default. To upgrade the plugin in place, replace the binary it ships with the one from this repo's release tarball.
+The Linux build of Codex Desktop already bundles this binary as a plugin. You don't need to wire it up manually — the plugin definition lives in [`codex-desktop-linux`](https://github.com/avifenesh/codex-desktop-linux) under its `plugins/` directory and is enabled by default. To upgrade the plugin in place, replace the binary it ships with the one from this repo's release assets.
 
 ### Claude Desktop
 
@@ -153,7 +169,18 @@ Restart Claude Desktop. The 15 tools should appear in the tools list.
 
 ### Hermes Agent
 
-Edit `~/.hermes/config.yaml`:
+If `computer-use-linux` is on your `PATH`, let Hermes discover it:
+
+```bash
+hermes mcp add computer-use-linux --command computer-use-linux --args mcp
+hermes mcp test computer-use-linux
+```
+
+Press Enter at the "Enable all tools?" prompt to expose all 15 tools. Hermes registers them as `mcp_computer_use_linux_<tool>` and creates the `mcp-computer-use-linux` runtime toolset.
+
+If you installed the binary somewhere that is not on `PATH`, pass the absolute path as `--command`.
+
+You can also edit `~/.hermes/config.yaml` directly:
 
 ```yaml
 mcp_servers:
@@ -242,6 +269,17 @@ Built on top of:
 - [`zbus`](https://crates.io/crates/zbus) — async DBus
 - [`rmcp`](https://crates.io/crates/rmcp) — MCP runtime
 - [`ydotool`](https://github.com/ReimuNotMoe/ydotool) — Wayland-friendly uinput driver
+
+## Publishing
+
+Publishing is tag-driven from GitHub Actions. The repository needs these Actions secrets:
+
+```bash
+gh secret set CARGO_REGISTRY_TOKEN -R avifenesh/computer-use-linux
+gh secret set NPM_TOKEN -R avifenesh/computer-use-linux
+```
+
+Then bump `Cargo.toml` and `package.json` together, update `CHANGELOG.md`, and push a `vX.Y.Z` tag. CI runs the full Rust and MCP safety gates, builds release assets for both architectures, publishes `computer-use-linux` to crates.io, and publishes the npm wrapper after the GitHub release binaries are available.
 
 ## License
 
