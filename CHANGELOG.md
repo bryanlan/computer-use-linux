@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   binaries and install it from `install.sh` so COSMIC window targeting works
   outside `cargo install`.
 - Keep the MCP `serverInfo.version` aligned with the Cargo package version.
+- Remove unused direct `libc` and `png` dependencies from the crate manifest.
 
 ### Documentation
 - Add Hermes Agent CLI setup commands and clarify the registered MCP tool
@@ -36,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   match the release assets, which are raw binaries with `.sha256` files rather
   than tar archives.
 - Document the mutating-tool safety contract for MCP hosts and npm users.
+- Pin README and npm README install examples to the released `0.2.1` packages
+  and `v0.2.1` GitHub release assets.
 
 ## [0.2.0] - 2026-05-14
 

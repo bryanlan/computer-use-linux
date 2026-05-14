@@ -6,6 +6,8 @@ Linux desktop control for any MCP host — AT-SPI accessibility trees, portal sc
 [![crates.io](https://img.shields.io/crates/v/computer-use-linux.svg)](https://crates.io/crates/computer-use-linux)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+Current release: [`v0.2.1`](https://github.com/avifenesh/computer-use-linux/releases/tag/v0.2.1). The Rust crate is published as [`computer-use-linux`](https://crates.io/crates/computer-use-linux), and the npm wrapper is published as [`@agent-sh/computer-use-linux`](https://www.npmjs.com/package/@agent-sh/computer-use-linux).
+
 ## What this is
 
 `computer-use-linux` is a Rust MCP server and CLI for Linux desktop control. The crate ships the main `computer-use-linux` binary plus a small `computer-use-linux-cosmic` helper used only for COSMIC Wayland window management. Any MCP host — Codex Desktop's Linux build, Claude Desktop, [Hermes Agent](https://github.com/NousResearch/hermes-agent), or your own client — can spawn it and gain full control of the local Linux desktop: read accessibility trees, list and focus windows, take screenshots, click, drag, scroll, type, and invoke semantic accessibility actions.
@@ -112,7 +114,7 @@ computer-use-linux doctor | jq .readiness
 Installs the Rust binaries from crates.io. You still handle the system-level pieces yourself: `ydotoold`, AT-SPI, desktop portals, and the GNOME extension if you need the GNOME Wayland exact-focus backend.
 
 ```bash
-cargo install computer-use-linux
+cargo install computer-use-linux --version 0.2.1
 computer-use-linux doctor
 ```
 
@@ -136,7 +138,7 @@ computer-use-linux setup-window-targeting     # GNOME Shell extension
 Good for users who already have Node.js and want a no-Rust install. The npm package downloads and verifies the matching main and COSMIC helper binaries during install, then the wrapper sets `COMPUTER_USE_LINUX_COSMIC_HELPER` to the bundled helper automatically.
 
 ```bash
-npm install -g @agent-sh/computer-use-linux
+npm install -g @agent-sh/computer-use-linux@0.2.1
 computer-use-linux doctor
 ```
 
@@ -146,14 +148,15 @@ You will still need `ydotoold` running and AT-SPI enabled (run `computer-use-lin
 
 Linux x86_64 / aarch64 builds are published with each tag. Each binary ships a `.sha256` next to it.
 
-- Releases: <https://github.com/avifenesh/computer-use-linux/releases>
+- Release: <https://github.com/avifenesh/computer-use-linux/releases/tag/v0.2.1>
 
 ```bash
 target=x86_64-unknown-linux-gnu
+version=v0.2.1
 for binary in computer-use-linux computer-use-linux-cosmic; do
   asset="$binary-$target"
-  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/latest/download/$asset"
-  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/latest/download/$asset.sha256"
+  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/download/$version/$asset"
+  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/download/$version/$asset.sha256"
   sha256sum -c "$asset.sha256"
   install -m 0755 "$asset" "$HOME/.local/bin/$binary"
 done
