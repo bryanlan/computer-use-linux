@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Synced upstream Linux Computer Use text-input improvements: Wayland remote
+  desktop portal keyboard sessions, KDE/Plasma clipboard paste fallback for
+  layout-safe `type_text`, and literal keysym typing on non-KDE Wayland
+  sessions before falling back to `ydotool`.
+- Synced upstream Hyprland/session hydration fixes, including systemd user
+  environment discovery, common command path hydration, `HYPRLAND_INSTANCE_SIGNATURE`
+  inference, and rounded window-id disambiguation.
+
+### Changed
+- `setup_accessibility` and `doctor` now understand the AT-SPI
+  `org.a11y.Status IsEnabled` path in addition to GNOME toolkit accessibility.
+
 ## [0.2.1] - 2026-05-14
 
 ### Added
