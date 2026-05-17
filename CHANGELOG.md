@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added a Hermes-compatible skill tap at `skills/computer-use-linux/SKILL.md`
+  and an `agnix` CI gate for agent-sh skill/config hygiene.
+- Added agent-sh project-health files: `CONTRIBUTING.md`, `SECURITY.md`,
+  `CODE_OF_CONDUCT.md`, and `CODEOWNERS`.
 - Synced upstream Linux Computer Use text-input improvements: Wayland remote
   desktop portal keyboard sessions, KDE/Plasma clipboard paste fallback for
   layout-safe `type_text`, and literal keysym typing on non-KDE Wayland
@@ -17,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   inference, and rounded window-id disambiguation.
 
 ### Changed
+- Updated repository, release, package, and CI links from `avifenesh` to the
+  `agent-sh/computer-use-linux` org repo.
 - `setup_accessibility` and `doctor` now understand the AT-SPI
   `org.a11y.Status IsEnabled` path in addition to GNOME toolkit accessibility.
 
@@ -132,7 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validated against GNOME 50.1 on Wayland (Ubuntu 25.10).
 - KDE / Sway / Hyprland untested — see README support matrix.
 
-[Unreleased]: https://github.com/avifenesh/computer-use-linux/compare/v0.2.1...HEAD
-[0.2.1]: https://github.com/avifenesh/computer-use-linux/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/avifenesh/computer-use-linux/releases/tag/v0.2.0
-[0.1.0]: https://github.com/avifenesh/computer-use-linux/releases/tag/v0.1.0
+[Unreleased]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/agent-sh/computer-use-linux/releases/tag/v0.2.0
+[0.1.0]: https://github.com/agent-sh/computer-use-linux/releases/tag/v0.1.0

@@ -12,8 +12,22 @@ desktop actions.
 ```bash
 npm install -g @agent-sh/computer-use-linux@0.2.1
 computer-use-linux doctor
+hermes skills tap add agent-sh/computer-use-linux
+hermes skills install agent-sh/computer-use-linux/computer-use-linux
 hermes mcp add computer-use-linux --command computer-use-linux --args mcp
 hermes mcp test computer-use-linux
+hermes mcp configure computer-use-linux
+```
+
+The generated Hermes config should look like this:
+
+```yaml
+mcp_servers:
+  computer-use-linux:
+    command: computer-use-linux
+    args: ["mcp"]
+    timeout: 120
+    connect_timeout: 30
 ```
 
 The package downloads the matching Linux x86_64 or aarch64 binary from the

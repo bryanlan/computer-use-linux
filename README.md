@@ -1,12 +1,22 @@
-# computer-use-linux
+<div align="center">
+  <h1>computer-use-linux</h1>
+  <p><strong>Linux desktop control for MCP hosts.</strong></p>
+  <p>
+    <a href="https://github.com/agent-sh/computer-use-linux/actions/workflows/ci.yml"><img src="https://github.com/agent-sh/computer-use-linux/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+    <a href="https://crates.io/crates/computer-use-linux"><img src="https://img.shields.io/crates/v/computer-use-linux.svg" alt="crates.io"></a>
+    <a href="https://www.npmjs.com/package/@agent-sh/computer-use-linux"><img src="https://img.shields.io/npm/v/@agent-sh/computer-use-linux.svg" alt="npm"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  </p>
+</div>
 
-Linux desktop control for any MCP host — AT-SPI accessibility trees, portal screenshots, Wayland/X11 input, and multi-compositor window targeting for GNOME, KDE/KWin, Hyprland, i3, and COSMIC.
+Linux desktop control for any MCP host: AT-SPI accessibility trees, portal screenshots, Wayland/X11 input, and multi-compositor window targeting for GNOME, KDE/KWin, Hyprland, i3, and COSMIC.
 
-[![CI](https://github.com/avifenesh/computer-use-linux/actions/workflows/ci.yml/badge.svg)](https://github.com/avifenesh/computer-use-linux/actions/workflows/ci.yml)
-[![crates.io](https://img.shields.io/crates/v/computer-use-linux.svg)](https://crates.io/crates/computer-use-linux)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+```bash
+npm install -g @agent-sh/computer-use-linux@0.2.1
+computer-use-linux doctor | jq .readiness
+```
 
-Current release: [`v0.2.1`](https://github.com/avifenesh/computer-use-linux/releases/tag/v0.2.1). The Rust crate is published as [`computer-use-linux`](https://crates.io/crates/computer-use-linux), and the npm wrapper is published as [`@agent-sh/computer-use-linux`](https://www.npmjs.com/package/@agent-sh/computer-use-linux).
+Current release: [`v0.2.1`](https://github.com/agent-sh/computer-use-linux/releases/tag/v0.2.1). The Rust crate is published as [`computer-use-linux`](https://crates.io/crates/computer-use-linux), and the npm wrapper is published as [`@agent-sh/computer-use-linux`](https://www.npmjs.com/package/@agent-sh/computer-use-linux).
 
 ## What this is
 
@@ -102,7 +112,7 @@ COSMIC users do not need a second package or a separate helper install when usin
 Installs system packages on Debian/Ubuntu, Fedora/RHEL-like, or Arch-like distros; installs Rust if needed; builds both release binaries; installs them to `~/.local/bin`; enables `ydotoold` as a user service; enables GNOME AT-SPI settings when running under GNOME; and installs the bundled GNOME Shell extension on GNOME Wayland.
 
 ```bash
-git clone https://github.com/avifenesh/computer-use-linux
+git clone https://github.com/agent-sh/computer-use-linux
 cd computer-use-linux
 ./install.sh
 # log out and back in if the GNOME extension was newly installed
@@ -121,7 +131,7 @@ computer-use-linux doctor
 For unreleased changes from `main`, install directly from Git:
 
 ```bash
-cargo install --git https://github.com/avifenesh/computer-use-linux
+cargo install --git https://github.com/agent-sh/computer-use-linux
 ```
 
 Then, as needed:
@@ -148,15 +158,15 @@ You will still need `ydotoold` running and AT-SPI enabled (run `computer-use-lin
 
 Linux x86_64 / aarch64 builds are published with each tag. Each binary ships a `.sha256` next to it.
 
-- Release: <https://github.com/avifenesh/computer-use-linux/releases/tag/v0.2.1>
+- Release: <https://github.com/agent-sh/computer-use-linux/releases/tag/v0.2.1>
 
 ```bash
 target=x86_64-unknown-linux-gnu
 version=v0.2.1
 for binary in computer-use-linux computer-use-linux-cosmic; do
   asset="$binary-$target"
-  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/download/$version/$asset"
-  curl -L -O "https://github.com/avifenesh/computer-use-linux/releases/download/$version/$asset.sha256"
+  curl -L -O "https://github.com/agent-sh/computer-use-linux/releases/download/$version/$asset"
+  curl -L -O "https://github.com/agent-sh/computer-use-linux/releases/download/$version/$asset.sha256"
   sha256sum -c "$asset.sha256"
   install -m 0755 "$asset" "$HOME/.local/bin/$binary"
 done
@@ -191,28 +201,50 @@ Restart Claude Desktop. The 15 tools should appear in the tools list.
 
 ### Hermes Agent
 
-If `computer-use-linux` is on your `PATH`, let Hermes discover it:
+Install the companion Hermes skill so Hermes has the desktop-specific runbook:
+
+```bash
+hermes skills tap add agent-sh/computer-use-linux
+hermes skills install agent-sh/computer-use-linux/computer-use-linux
+```
+
+The skill is optional but recommended for Hermes users. It teaches Hermes how to install, configure, verify, and call the Linux desktop MCP safely. It follows the same `skills/<name>/SKILL.md` tap layout used by Hermes community skills.
+
+Then add the stdio MCP server:
 
 ```bash
 hermes mcp add computer-use-linux --command computer-use-linux --args mcp
 hermes mcp test computer-use-linux
+hermes mcp configure computer-use-linux
 ```
 
-Press Enter at the "Enable all tools?" prompt to expose all 15 tools. Hermes registers them as `mcp_computer_use_linux_<tool>` and creates the `mcp-computer-use-linux` runtime toolset.
-
-If you installed the binary somewhere that is not on `PATH`, pass the absolute path as `--command`.
-
-You can also edit `~/.hermes/config.yaml` directly:
+`configure` opens Hermes' tool-selection UI for the server. The generated config should look like this:
 
 ```yaml
 mcp_servers:
   computer-use-linux:
     command: computer-use-linux
     args: ["mcp"]
+    timeout: 120
+    connect_timeout: 30
 
 # Optional: expose the tools to subagents as well.
 inherit_mcp_toolsets: true
 ```
+
+If you installed the binary somewhere that is not on `PATH`, pass the absolute path as `--command`.
+
+Restart Hermes after editing the config. Hermes registers the tools as `mcp_computer_use_linux_<tool>` and creates the `mcp-computer-use-linux` runtime toolset.
+
+You can verify both sides before asking Hermes to use the desktop:
+
+```bash
+computer-use-linux doctor | jq .readiness
+hermes skills inspect agent-sh/computer-use-linux/computer-use-linux
+hermes chat --toolsets mcp-computer-use-linux -q "List the current desktop windows."
+```
+
+For one-off installs without adding the tap first, Hermes also accepts `hermes skills install agent-sh/computer-use-linux/skills/computer-use-linux`.
 
 ### Generic MCP client
 
@@ -284,6 +316,10 @@ If you're running this on a shared workstation, set `ydotoold`'s socket permissi
 
 If `doctor` is green and a specific tool still misbehaves, file an issue with the JSON output of `doctor` and the failing tool's request payload.
 
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the local development workflow, CI gates, and PR expectations. Report security vulnerabilities through [SECURITY.md](SECURITY.md), not public issues.
+
 ## Credits
 
 Extracted from [`codex-desktop-linux`](https://github.com/avifenesh/codex-desktop-linux), the Linux distribution of Codex Desktop, which continues to ship this same binary as a bundled plugin. Maintained by [Avi Fenesh](https://github.com/avifenesh).
@@ -301,8 +337,8 @@ Built on top of:
 Publishing is tag-driven from GitHub Actions. The repository needs these Actions secrets:
 
 ```bash
-gh secret set CARGO_REGISTRY_TOKEN -R avifenesh/computer-use-linux
-gh secret set NPM_TOKEN -R avifenesh/computer-use-linux
+gh secret set CARGO_REGISTRY_TOKEN -R agent-sh/computer-use-linux
+gh secret set NPM_TOKEN -R agent-sh/computer-use-linux
 ```
 
 Then bump `Cargo.toml` and `package.json` together, update `CHANGELOG.md`, and push a `vX.Y.Z` tag. CI runs the full Rust and MCP safety gates, builds release assets for both architectures, publishes `computer-use-linux` to crates.io, and publishes the npm wrapper after the GitHub release binaries are available.

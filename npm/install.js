@@ -102,7 +102,7 @@ async function main() {
   const cosmicAsset = `computer-use-linux-cosmic-${targetArch}-unknown-linux-gnu`;
   const baseUrl =
     process.env.COMPUTER_USE_LINUX_DOWNLOAD_BASE ||
-    `https://github.com/avifenesh/computer-use-linux/releases/download/v${pkg.version}`;
+    `https://github.com/agent-sh/computer-use-linux/releases/download/v${pkg.version}`;
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'computer-use-linux-'));
   const tmpBinary = path.join(tmpDir, asset);
   const tmpSha = path.join(tmpDir, `${asset}.sha256`);
