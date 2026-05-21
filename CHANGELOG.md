@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-05-21
+
 ### Added
+- Added a uinput absolute pointer (`abs_pointer.rs`) that creates a private
+  `ABS_X`/`ABS_Y` device mapped to the portal screenshot coordinate space, so
+  clicks land at the requested pixel on multi-monitor / HiDPI setups instead of
+  being distorted by pointer acceleration and fractional scaling. Wired into
+  `click()` with `ydotool` fallback; opt out via `CU_DISABLE_ABS_POINTER`.
 - Added a Hermes-compatible skill tap at `skills/computer-use-linux/SKILL.md`
   and an `agnix` CI gate for agent-sh skill/config hygiene.
 - Added agent-sh project-health files: `CONTRIBUTING.md`, `SECURITY.md`,
@@ -19,6 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Synced upstream Hyprland/session hydration fixes, including systemd user
   environment discovery, common command path hydration, `HYPRLAND_INSTANCE_SIGNATURE`
   inference, and rounded window-id disambiguation.
+
+### Fixed
+- Omitted the debug-only `received` echo field from the generated MCP
+  `outputSchema` for `ActionOutput` and `ActivateWindowOutput`. `schemars`
+  serialized `Option<serde_json::Value>` as the boolean schema `true`, which
+  strict MCP clients (mcphub, Claude Desktop, `@modelcontextprotocol/sdk`'s
+  `AssertObjectSchema`) reject, failing the whole `tools/list` response.
+  Affected `click`, `drag`, `perform_action`, `press_key`, `scroll`,
+  `set_value`, `type_text`, and `activate_window`. (#1)
 
 ### Changed
 - Updated repository, release, package, and CI links from `avifenesh` to the
