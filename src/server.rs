@@ -21,8 +21,9 @@ use crate::windows::{
 use anyhow::Result;
 use rmcp::{
     handler::server::wrapper::{Json, Parameters},
+    model::{CallToolResult, Content},
     schemars::JsonSchema,
-    tool, tool_handler, tool_router, ServerHandler, ServiceExt,
+    tool, tool_handler, tool_router, ErrorData, ServerHandler, ServiceExt,
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -41,6 +42,8 @@ pub struct ComputerUseLinux {
     last_nodes: Arc<Mutex<Vec<AccessibilityNode>>>,
     portal_pointer_session: Arc<Mutex<Option<PortalPointerSession>>>,
     portal_keyboard_session: Arc<Mutex<Option<PortalKeyboardSession>>>,
+    /// Lazily-created uinput absolute pointer (preferred coordinate backend).
+    abs_pointer: Arc<Mutex<Option<crate::abs_pointer::AbsPointer>>>,
 }
 
 #[tool_router]
@@ -308,6 +311,118 @@ impl ComputerUseLinux {
     }
 
     #[tool(
+        name = "screenshot",
+        description = "Capture the screen and return it as a viewable image. Optionally target a window (window_id/pid/wm_class/title/app_id): the window is raised to the front and the image is cropped to just that window, so you see the app on its own rather than the whole desktop. Returns the PNG image plus a short caption (dimensions, source, and crop bounds).",
+        annotations(
+            read_only_hint = true,
+            destructive_hint = false,
+            idempotent_hint = true,
+            open_world_hint = false
+        )
+    )]
+    async fn screenshot(
+        &self,
+        Parameters(params): Parameters<ScreenshotParams>,
+    ) -> Result<CallToolResult, ErrorData> {
+        let target = params.window_target();
+
+        // When targeting a window, raise it first (so it isn't occluded) and
+        // resolve its bounds so we can crop to just that window.
+        let mut crop: Option<crate::windowing::WindowBounds> = None;
+        let mut window_label: Option<String> = None;
+        if let Some(target) = &target {
+            if params.raise_window.unwrap_or(true) {
+                let _ = focus_window_target(target).await;
+                tokio::time::sleep(Duration::from_millis(250)).await;
+            }
+            if !params.full_screen.unwrap_or(false) {
+                if let Ok(windows) = list_windows().await {
+                    if let Ok(window) = resolve_window_target(&windows, target) {
+                        crop = window.bounds.clone();
+                        window_label = window.title.clone();
+                    }
+                }
+            }
+        }
+
+        let capture = capture_screenshot()
+            .await
+            .map_err(|e| ErrorData::internal_error(format!("screenshot failed: {e}"), None))?;
+        let raw =
+            decode_data_url(&capture.data_url).map_err(|e| ErrorData::internal_error(e, None))?;
+
+        let (png, width, height, cropped) = match crop.as_ref().and_then(window_crop_rect) {
+            Some((x, y, w, h)) => match crop_png(&raw, x, y, w, h) {
+                Ok((bytes, cw, ch)) => (bytes, cw, ch, true),
+                // If cropping fails, fall back to the full frame rather than erroring.
+                Err(_) => (raw, capture.width, capture.height, false),
+            },
+            None => (raw, capture.width, capture.height, false),
+        };
+
+        let b64 = base64::Engine::encode(&base64::engine::general_purpose::STANDARD, &png);
+        let caption = serde_json::json!({
+            "width": width,
+            "height": height,
+            "source": capture.source,
+            "cropped_to_window": cropped,
+            "window_title": window_label,
+        });
+        Ok(CallToolResult::success(vec![
+            Content::image(b64, "image/png".to_string()),
+            Content::text(caption.to_string()),
+        ]))
+    }
+
+    /// Lazily create the uinput absolute pointer, sizing its ABS range to the
+    /// logical desktop (the portal screenshot dimensions). Returns `false` if it
+    /// can't be created or is disabled via `CU_DISABLE_ABS_POINTER`.
+    async fn ensure_abs_pointer(&self) -> bool {
+        if env_flag_enabled("CU_DISABLE_ABS_POINTER") {
+            return false;
+        }
+        if self
+            .abs_pointer
+            .lock()
+            .map(|g| g.is_some())
+            .unwrap_or(false)
+        {
+            return true;
+        }
+        let Ok(cap) = crate::screenshot::capture_screenshot().await else {
+            return false;
+        };
+        match crate::abs_pointer::AbsPointer::create(cap.width as i32, cap.height as i32) {
+            Ok(pointer) => {
+                if let Ok(mut guard) = self.abs_pointer.lock() {
+                    *guard = Some(pointer);
+                    return true;
+                }
+                false
+            }
+            Err(_) => false,
+        }
+    }
+
+    /// Try a coordinate click through the absolute uinput pointer. `Some(ok)` if
+    /// the backend was used; `None` to fall through to portal / ydotool.
+    async fn try_abs_click(
+        &self,
+        x: i32,
+        y: i32,
+        button: Option<&str>,
+        count: u32,
+    ) -> Option<bool> {
+        if !self.ensure_abs_pointer().await {
+            return None;
+        }
+        let btn = crate::abs_pointer::PointerButton::from_name(button);
+        let mut guard = self.abs_pointer.lock().ok()?;
+        let pointer = guard.as_mut()?;
+        Some(pointer.click(x, y, btn, count).is_ok())
+    }
+
+    #[tool(
         name = "click",
         description = "Click an element by index, semantic selector, or pixel coordinates from screenshot.",
         annotations(
@@ -317,8 +432,28 @@ impl ComputerUseLinux {
             open_world_hint = true
         )
     )]
-    async fn click(&self, Parameters(params): Parameters<ClickParams>) -> Json<ActionOutput> {
+    async fn click(&self, Parameters(mut params): Parameters<ClickParams>) -> Json<ActionOutput> {
         let received = Some(serde_json::json!(params));
+        // Raise the target window first (if specified) so the click lands on the
+        // intended app rather than whatever is stacked on top at that pixel.
+        if let Some(target) = params.window_target() {
+            let _ = focus_window_target(&target).await;
+            tokio::time::sleep(std::time::Duration::from_millis(120)).await;
+            // Window-relative coordinates: translate by the window's top-left so
+            // the agent can click the pixel it saw in a window-cropped screenshot.
+            if params.relative == Some(true) {
+                if let (Some(rx), Some(ry)) = (params.x, params.y) {
+                    if let Ok(windows) = list_windows().await {
+                        if let Ok(window) = resolve_window_target(&windows, &target) {
+                            if let Some(bounds) = &window.bounds {
+                                params.x = Some(bounds.x.unwrap_or(0) + rx);
+                                params.y = Some(bounds.y.unwrap_or(0) + ry);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         let target = match self.resolve_click_target(&params) {
             Ok(target) => target,
             Err(message) => {
@@ -376,6 +511,29 @@ impl ComputerUseLinux {
         };
         let button = mouse_button_code(params.button.as_deref());
         let click_count = params.click_count.unwrap_or(1).clamp(1, 10).to_string();
+        // Preferred backend: the uinput absolute pointer. Unlike ydotool's
+        // relative-only device (faked `--absolute` via pin-to-corner + relative
+        // move, which acceleration + fractional scaling distort) and unlike the
+        // portal (per-monitor coordinate scaling + an approval dialog), the
+        // absolute pointer lands exactly at the screenshot pixel.
+        if self
+            .try_abs_click(
+                x,
+                y,
+                params.button.as_deref(),
+                params.click_count.unwrap_or(1).clamp(1, 10),
+            )
+            .await
+            == Some(true)
+        {
+            return Json(ActionOutput {
+                ok: true,
+                implemented: true,
+                action: "click".to_string(),
+                message: "Action sent through the uinput absolute pointer.".to_string(),
+                received,
+            });
+        }
         if let Some(session) = self.cached_portal_pointer_session() {
             match portal_click(
                 &session,
@@ -624,6 +782,32 @@ impl ComputerUseLinux {
     )]
     async fn drag(&self, Parameters(params): Parameters<DragParams>) -> Json<ActionOutput> {
         let received = Some(serde_json::json!(params));
+        // Preferred backend: the uinput absolute pointer (accurate landing).
+        if self.ensure_abs_pointer().await {
+            let dragged = {
+                if let Ok(mut guard) = self.abs_pointer.lock() {
+                    guard.as_mut().map(|p| {
+                        p.drag(
+                            (params.start_x, params.start_y),
+                            (params.end_x, params.end_y),
+                            crate::abs_pointer::PointerButton::Left,
+                        )
+                        .is_ok()
+                    })
+                } else {
+                    None
+                }
+            };
+            if dragged == Some(true) {
+                return Json(ActionOutput {
+                    ok: true,
+                    implemented: true,
+                    action: "drag".to_string(),
+                    message: "Action sent through the uinput absolute pointer.".to_string(),
+                    received,
+                });
+            }
+        }
         if let Some(session) = self.cached_portal_pointer_session() {
             match portal_drag(
                 &session,
@@ -910,6 +1094,11 @@ struct ActivateWindowOutput {
     focus: Option<WindowFocusResult>,
     error: Option<String>,
     permissions_hint: Option<String>,
+    // Echo of the request for debugging. `serde_json::Value` has no fixed JSON
+    // schema, which strict MCP clients (Claude Code) reject in `outputSchema` —
+    // and one invalid tool fails the whole tool list. Keep it in the runtime
+    // response (serde) but omit it from the generated schema.
+    #[schemars(skip)]
     received: Option<serde_json::Value>,
 }
 
@@ -966,6 +1155,51 @@ impl GetAppStateParams {
     }
 }
 
+#[derive(Debug, Clone, Default, Deserialize, Serialize, JsonSchema)]
+struct ScreenshotParams {
+    #[serde(default)]
+    window_id: Option<u64>,
+    #[serde(default)]
+    pid: Option<u32>,
+    #[serde(default)]
+    app_id: Option<String>,
+    #[serde(default)]
+    wm_class: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    /// Raise the targeted window before capture (default true). Ignored without
+    /// a window target.
+    #[serde(default)]
+    raise_window: Option<bool>,
+    /// Capture the whole desktop even when a window is targeted (default false).
+    #[serde(default)]
+    full_screen: Option<bool>,
+}
+
+impl ScreenshotParams {
+    fn window_target(&self) -> Option<WindowTarget> {
+        if self.window_id.is_none()
+            && self.pid.is_none()
+            && self.app_id.is_none()
+            && self.wm_class.is_none()
+            && self.title.is_none()
+        {
+            return None;
+        }
+        Some(WindowTarget {
+            window_id: self.window_id,
+            pid: self.pid,
+            tty: None,
+            terminal_pid: None,
+            terminal_command: None,
+            terminal_cwd: None,
+            app_id: self.app_id.clone(),
+            wm_class: self.wm_class.clone(),
+            title: self.title.clone(),
+        })
+    }
+}
+
 #[derive(Debug, Clone, Serialize, JsonSchema)]
 struct GetAppStateOutput {
     app_name_or_bundle_identifier: Option<String>,
@@ -1002,9 +1236,50 @@ struct ClickParams {
     button: Option<String>,
     #[serde(default)]
     click_count: Option<u32>,
+    // Optional window target: when set, the window is raised/focused before the
+    // click so a coordinate click reliably lands on the intended app rather than
+    // whatever window happens to be stacked on top at that pixel.
+    #[serde(default)]
+    window_id: Option<u64>,
+    #[serde(default)]
+    pid: Option<u32>,
+    #[serde(default)]
+    app_id: Option<String>,
+    #[serde(default)]
+    wm_class: Option<String>,
+    #[serde(default)]
+    window_title: Option<String>,
+    /// Interpret `x`/`y` as relative to the targeted window's top-left corner
+    /// (the same coordinate space as a window-cropped `screenshot`). Requires a
+    /// window target; ignored otherwise.
+    #[serde(default)]
+    relative: Option<bool>,
 }
 
 impl ClickParams {
+    /// A window target if any window-identifying field was supplied.
+    fn window_target(&self) -> Option<WindowTarget> {
+        if self.window_id.is_none()
+            && self.pid.is_none()
+            && self.app_id.is_none()
+            && self.wm_class.is_none()
+            && self.window_title.is_none()
+        {
+            return None;
+        }
+        Some(WindowTarget {
+            window_id: self.window_id,
+            pid: self.pid,
+            tty: None,
+            terminal_pid: None,
+            terminal_command: None,
+            terminal_cwd: None,
+            app_id: self.app_id.clone(),
+            wm_class: self.wm_class.clone(),
+            title: self.window_title.clone(),
+        })
+    }
+
     fn selector(&self) -> ElementSelector<'_> {
         ElementSelector {
             role: self.role.as_deref(),
@@ -1177,6 +1452,10 @@ struct ActionOutput {
     implemented: bool,
     action: String,
     message: String,
+    // See ActivateWindowOutput: kept in the response, omitted from the schema
+    // because `serde_json::Value` produces a non-object schema strict MCP
+    // clients reject.
+    #[schemars(skip)]
     received: Option<serde_json::Value>,
 }
 
@@ -1188,21 +1467,31 @@ impl ComputerUseLinux {
             .is_some_and(|value| value.eq_ignore_ascii_case("wayland"))
     }
 
+    // The Wayland remote-desktop portal is now a *fallback* for input: when a
+    // working `ydotoold` socket is present we prefer ydotool, because it injects
+    // input without a permission prompt. GNOME refuses to persist remote-desktop
+    // grants (`org.freedesktop.portal.Error: Remote desktop sessions cannot
+    // persist`), so the portal would otherwise re-prompt on every new session.
+    // `COMPUTER_USE_LINUX_FORCE_YDOTOOL_*=1` always uses ydotool;
+    // `COMPUTER_USE_LINUX_FORCE_PORTAL_*=1` always uses the portal.
     fn should_prefer_portal_pointer_backend(&self) -> bool {
-        env::var("COMPUTER_USE_LINUX_FORCE_YDOTOOL_POINTER")
-            .ok()
-            .as_deref()
-            != Some("1")
-            && self.is_wayland_session()
+        if env_flag_enabled("COMPUTER_USE_LINUX_FORCE_YDOTOOL_POINTER") {
+            return false;
+        }
+        if env_flag_enabled("COMPUTER_USE_LINUX_FORCE_PORTAL_POINTER") {
+            return self.is_wayland_session();
+        }
+        self.is_wayland_session() && ydotool_socket().is_none()
     }
 
     fn should_prefer_portal_keyboard_backend(&self) -> bool {
-        env::var("COMPUTER_USE_LINUX_FORCE_YDOTOOL_KEYBOARD")
-            .ok()
-            .as_deref()
-            != Some("1")
-            && self.is_wayland_session()
-            && !self.is_kde_wayland_session()
+        if env_flag_enabled("COMPUTER_USE_LINUX_FORCE_YDOTOOL_KEYBOARD") {
+            return false;
+        }
+        if env_flag_enabled("COMPUTER_USE_LINUX_FORCE_PORTAL_KEYBOARD") {
+            return self.is_wayland_session() && !self.is_kde_wayland_session();
+        }
+        self.is_wayland_session() && !self.is_kde_wayland_session() && ydotool_socket().is_none()
     }
 
     fn should_prefer_kde_clipboard_text_backend(&self) -> bool {
@@ -1942,6 +2231,58 @@ fn env_contains(key: &str, needle: &str) -> bool {
     env::var(key)
         .ok()
         .is_some_and(|value| value.to_ascii_lowercase().contains(needle))
+}
+
+/// True when an environment variable is set to `"1"` (an explicit on switch).
+fn env_flag_enabled(key: &str) -> bool {
+    env::var(key).ok().as_deref() == Some("1")
+}
+
+/// Decode the base64 payload of a `data:` URL (or a bare base64 string) to bytes.
+fn decode_data_url(data_url: &str) -> std::result::Result<Vec<u8>, String> {
+    use base64::Engine;
+    let b64 = data_url.split_once(',').map(|(_, b)| b).unwrap_or(data_url);
+    base64::engine::general_purpose::STANDARD
+        .decode(b64)
+        .map_err(|e| format!("invalid screenshot base64: {e}"))
+}
+
+/// Convert a window's bounds into a crop rectangle, if it has a usable origin
+/// and non-zero size.
+fn window_crop_rect(bounds: &crate::windowing::WindowBounds) -> Option<(i32, i32, u32, u32)> {
+    let x = bounds.x?;
+    let y = bounds.y?;
+    if bounds.width == 0 || bounds.height == 0 {
+        return None;
+    }
+    Some((x, y, bounds.width, bounds.height))
+}
+
+/// Crop a PNG image to `(x, y, w, h)` (clamped to the image), returning the
+/// re-encoded PNG and the actual cropped dimensions.
+fn crop_png(
+    raw: &[u8],
+    x: i32,
+    y: i32,
+    w: u32,
+    h: u32,
+) -> std::result::Result<(Vec<u8>, u32, u32), String> {
+    use std::io::Cursor;
+    let img = image::load_from_memory_with_format(raw, image::ImageFormat::Png)
+        .map_err(|e| format!("decode png: {e}"))?;
+    let (iw, ih) = (img.width(), img.height());
+    let x = x.max(0) as u32;
+    let y = y.max(0) as u32;
+    if x >= iw || y >= ih {
+        return Err("crop origin outside image".into());
+    }
+    let w = w.min(iw - x);
+    let h = h.min(ih - y);
+    let sub = img.crop_imm(x, y, w, h);
+    let mut out = Vec::new();
+    sub.write_to(&mut Cursor::new(&mut out), image::ImageFormat::Png)
+        .map_err(|e| format!("encode png: {e}"))?;
+    Ok((out, w, h))
 }
 
 fn action_result(
