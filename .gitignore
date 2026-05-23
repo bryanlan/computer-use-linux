@@ -26,6 +26,10 @@ dist/
 # node deps (zod schema check is CI-only, deps installed on demand)
 node_modules/
 
+# Python bytecode cache
+__pycache__/
+*.py[cod]
+
 # npm wrapper postinstall artifacts from local smoke tests
 /npm/bin/computer-use-linux-linux-*
 /npm/bin/computer-use-linux-darwin-*
