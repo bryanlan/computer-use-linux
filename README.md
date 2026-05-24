@@ -16,7 +16,7 @@ npm install -g @agent-sh/computer-use-linux@0.2.1
 computer-use-linux doctor | jq .readiness
 ```
 
-Current release: [`v0.2.1`](https://github.com/agent-sh/computer-use-linux/releases/tag/v0.2.1). The Rust crate is published as [`computer-use-linux`](https://crates.io/crates/computer-use-linux), and the npm wrapper is published as [`@agent-sh/computer-use-linux`](https://www.npmjs.com/package/@agent-sh/computer-use-linux).
+Current release: [`v0.2.3`](https://github.com/agent-sh/computer-use-linux/releases/tag/v0.2.3). The Rust crate is published as [`computer-use-linux`](https://crates.io/crates/computer-use-linux), and the npm wrapper is published as [`@agent-sh/computer-use-linux`](https://www.npmjs.com/package/@agent-sh/computer-use-linux).
 
 ## What this is
 
