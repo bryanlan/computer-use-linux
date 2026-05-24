@@ -12,7 +12,7 @@
 Linux desktop control for any MCP host: AT-SPI accessibility trees, portal screenshots, Wayland/X11 input, and multi-compositor window targeting for GNOME, KDE/KWin, Hyprland, i3, and COSMIC.
 
 ```bash
-npm install -g @agent-sh/computer-use-linux@0.2.1
+npm install -g @agent-sh/computer-use-linux
 computer-use-linux doctor | jq .readiness
 ```
 
