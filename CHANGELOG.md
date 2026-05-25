@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.4] - 2026-05-25
 
-Documentation-only release (no `src/` changes since 0.2.3); refreshes the
-crates.io and npm README pages.
+Primarily a documentation release that refreshes the crates.io and npm README
+pages; also bumps the MCP server's advertised version string to match.
 
 ### Added
 - Documented the `screenshot` MCP tool and the `doctor` capability map, which
