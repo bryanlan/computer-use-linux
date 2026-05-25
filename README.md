@@ -1,6 +1,6 @@
 <div align="center">
   <h1>computer-use-linux</h1>
-  <p><strong>Linux desktop control for MCP hosts.</strong></p>
+  <p><strong>Control a real Linux desktop from any MCP host.</strong></p>
   <p>
     <a href="https://github.com/agent-sh/computer-use-linux/actions/workflows/ci.yml"><img src="https://github.com/agent-sh/computer-use-linux/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
     <a href="https://crates.io/crates/computer-use-linux"><img src="https://img.shields.io/crates/v/computer-use-linux.svg" alt="crates.io"></a>
@@ -9,7 +9,7 @@
   </p>
 </div>
 
-Linux desktop control for any MCP host: AT-SPI accessibility trees, portal screenshots, Wayland/X11 input, and multi-compositor window targeting for GNOME, KDE/KWin, Hyprland, i3, and COSMIC.
+`computer-use-linux` reads accessibility trees, takes screenshots, and drives clicks, scrolls, and keystrokes across GNOME, KDE/KWin, Hyprland, i3, and COSMIC — Wayland-first, X11 best-effort.
 
 ```bash
 npm install -g @agent-sh/computer-use-linux
@@ -22,7 +22,7 @@ The Rust crate is published as [`computer-use-linux`](https://crates.io/crates/c
 
 `computer-use-linux` is a Rust MCP server and CLI for Linux desktop control. The crate ships the main `computer-use-linux` binary plus a small `computer-use-linux-cosmic` helper used only for COSMIC Wayland window management. Any MCP host — Codex Desktop's Linux build, Claude Desktop, [Hermes Agent](https://github.com/NousResearch/hermes-agent), or your own client — can spawn it and gain full control of the local Linux desktop: read accessibility trees, list and focus windows, take screenshots, click, drag, scroll, type, and invoke semantic accessibility actions.
 
-Most computer-use MCP servers are macOS-only (they rely on AppKit, AXUIElement, CGEvent). The few that target Linux either drive `xdotool` against an X11 root window or shell out to OCR over screenshots. This crate is different on four points worth caring about:
+Most computer-use MCP servers are macOS-only (they lean on AppKit, AXUIElement, CGEvent). The few that target Linux either drive `xdotool` against an X11 root window or shell out to OCR over screenshots. Four things set this one apart:
 
 - **Wayland actually works.** Pointer actions can use the `org.freedesktop.portal.RemoteDesktop` interface on Wayland, with `ydotool` / `ydotoold` (uinput) as the deterministic fallback and keyboard/text path. Screenshots use the GNOME Shell DBus screenshot method when present and `org.freedesktop.portal.Screenshot` otherwise.
 - **Window targeting is compositor-aware.** The window registry tries GNOME Shell extension, GNOME Shell Introspect, COSMIC Wayland helper, KWin DBus scripting, Hyprland `hyprctl`, and i3 IPC in order, then reports exactly which backend won or why each backend failed.
@@ -295,6 +295,28 @@ Spawn the binary with `["mcp"]` as the argv tail. It speaks JSON-RPC over stdio 
    ```
 
    Its socket should appear at `/run/user/$UID/.ydotool_socket`.
+
+## Environment variables
+
+Most setups need none of these — `doctor` and the installers pick sensible defaults. They exist for overriding auto-detected paths and input backends.
+
+**Server runtime** (set in the MCP host's environment):
+
+| Variable | Effect |
+| --- | --- |
+| `COMPUTER_USE_LINUX_COSMIC_HELPER` | Path to the `computer-use-linux-cosmic` helper when it isn't next to the binary or on `PATH`. |
+| `CU_DISABLE_ABS_POINTER` | Disable the uinput absolute pointer and click through `ydotool` instead (for setups where the abs-pointer device misbehaves). |
+| `COMPUTER_USE_LINUX_FORCE_PORTAL_POINTER` / `…_KEYBOARD` | Always route pointer / keyboard through the RemoteDesktop portal on Wayland, skipping auto-detection. |
+| `COMPUTER_USE_LINUX_FORCE_YDOTOOL_POINTER` / `…_KEYBOARD` | Always route pointer / keyboard through `ydotool`, skipping the portal and KDE clipboard paths. |
+
+**npm wrapper** (set during `npm install`, or before running):
+
+| Variable | Effect |
+| --- | --- |
+| `COMPUTER_USE_LINUX_BIN` | Run this binary instead of the one bundled by the npm package. |
+| `COMPUTER_USE_LINUX_DOWNLOAD_BASE` | Override the GitHub release base URL the installer downloads from (mirrors, air-gapped hosts). |
+| `COMPUTER_USE_LINUX_SKIP_DOWNLOAD=1` | Skip the post-install binary download entirely. |
+| `COMPUTER_USE_LINUX_LOCAL_BINARY` / `…_LOCAL_COSMIC_HELPER` | Install from a local build instead of downloading (used by CI and local testing). |
 
 ## Architecture
 
