@@ -1,7 +1,6 @@
 ---
 name: computer-use-linux
 description: "Use when Hermes needs Linux desktop observation or control through the computer-use-linux MCP server."
-version: 0.2.1
 author: agent-sh
 license: MIT
 platforms: [linux]
