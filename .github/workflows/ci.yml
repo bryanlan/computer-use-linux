@@ -208,7 +208,7 @@ jobs:
             sha256sum ${{ matrix.asset }} > ${{ matrix.asset }}.sha256
             sha256sum computer-use-linux-cosmic-${{ matrix.target }} > computer-use-linux-cosmic-${{ matrix.target }}.sha256
           )
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: |
             dist/${{ matrix.asset }}
