@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-06-05
+
 ### Added
 - Added build-time GNOME extension / DBus identity overrides (`CUL_*`) so the
   `codex-desktop-linux` embedded copy can share this source while keeping its
   Codex extension identity, plus runtime `CODEX_COMPUTER_USE_*` aliases for the
   embedded input/backend knobs.
+
+### Documentation
+- Cross-referenced the sibling `agent-workspace-linux` project in the README.
 
 ### Fixed
 - Bounded screenshot payloads by default before returning them to MCP hosts,
@@ -25,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ported downstream session hydration fixes for X11 launches by carrying
   `XAUTHORITY` through environment hydration and checking the same-user namespace
   init process when it owns the graphical session environment.
+
+### Security
+- Pinned the release upload GitHub Action to a commit SHA in CI.
 
 ## [0.2.4] - 2026-05-25
 
@@ -216,7 +224,11 @@ pages; also bumps the MCP server's advertised version string to match.
 - Validated against GNOME 50.1 on Wayland (Ubuntu 25.10).
 - KDE / Sway / Hyprland untested — see README support matrix.
 
-[Unreleased]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.5...HEAD
+[0.2.5]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.4...v0.2.5
+[0.2.4]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/agent-sh/computer-use-linux/releases/tag/v0.2.0
 [0.1.0]: https://github.com/agent-sh/computer-use-linux/releases/tag/v0.1.0
