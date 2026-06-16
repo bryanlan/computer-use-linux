@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.8] - 2026-06-17
+
+### Changed
+- Published a metadata-only patch release so local and downstream consumers can
+  pin the already-validated `computer-use-linux` package state.
+
 ## [0.2.7] - 2026-06-16
 
 ### Fixed
@@ -261,7 +267,8 @@ pages; also bumps the MCP server's advertised version string to match.
 - Validated against GNOME 50.1 on Wayland (Ubuntu 25.10).
 - KDE / Sway / Hyprland untested — see README support matrix.
 
-[Unreleased]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.7...HEAD
+[Unreleased]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.8...HEAD
+[0.2.8]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.7...v0.2.8
 [0.2.7]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/agent-sh/computer-use-linux/compare/v0.2.4...v0.2.5
