@@ -1,628 +1,73 @@
 {
-  "changed_paths": [],
-  "commits": [],
-  "docs_current_through": {
-    "commit": null,
-    "date": null
-  },
-  "from_commit": null,
-  "generated_at": "2026-06-24T07:42:37+00:00",
-  "head": {
-    "commit": "25e47308ac972e151d8a3e233d02c531ccb38904",
-    "date": "2026-06-22T08:36:41-07:00",
-    "short_commit": "25e4730"
-  },
-  "mode": "bootstrap",
-  "recent_commits": [
-    {
-      "author": "Avi Fenesh",
-      "commit": "b1e7d5d198d216664a50974db0c2326184646bc1",
-      "date": "2026-05-25T12:56:59+03:00",
-      "files": [
-        {
-          "paths": [
-            "README.md"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "b1e7d5d",
-      "subject": "docs: document screenshot tool and doctor capabilities; drop tool count"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "5093c8697aebeeea30e4524b68244f078c212f59",
-      "date": "2026-05-25T13:05:16+03:00",
-      "files": [
-        {
-          "paths": [
-            "README.md"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "5093c86",
-      "subject": "docs: warmer README opening and an Environment variables section"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "57acd1d7d706032850d9a8f069393214a9af9805",
-      "date": "2026-05-25T13:11:29+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "package.json"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "57acd1d",
-      "subject": "release: v0.2.4"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "6f3bfa1d7fbeb04706ac8dec943c6916856b2a98",
-      "date": "2026-05-25T13:16:22+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "6f3bfa1",
-      "subject": "fix: bump MCP server version literal to 0.2.4"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "b02989050e537e2a535cc272ce3d27c46703bdc1",
-      "date": "2026-05-27T08:04:14+03:00",
-      "files": [
-        {
-          "paths": [
-            "README.md"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "b029890",
-      "subject": "Cross-reference the sibling agent-workspace-linux in the README"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "b70b07dc94505ba469482778bf7135e315a1cf86",
-      "date": "2026-05-28T10:35:04+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "README.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/cosmic_helper.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/diagnostics.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/gnome_extension.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/identity.rs"
-          ],
-          "status": "A"
-        },
-        {
-          "paths": [
-            "src/main.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/windowing/backends/gnome.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "b70b07d",
-      "subject": "Align downstream Computer Use readiness and identity hooks (#13)"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "c8201c8e0740ec927a945920439d31fdb3528846",
-      "date": "2026-05-30T12:49:46+03:00",
-      "files": [
-        {
-          "paths": [
-            ".github/workflows/ci.yml"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "c8201c8",
-      "subject": "ci(security): pin softprops/action-gh-release to commit SHA (#15)"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "d8fb08d9a3e8cbe911249ec4735e76847287f83f",
-      "date": "2026-06-05T18:45:44+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "README.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/main.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/screenshot.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "d8fb08d",
-      "subject": "fix: bound screenshot payloads"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "726e6a725d056d1d280372ff0fb36c1e4014a8c9",
-      "date": "2026-06-05T18:54:07+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "package.json"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "726e6a7",
-      "subject": "release: v0.2.5"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "dd64e0aa932e7a21d2256eb2aacd87381b73250b",
-      "date": "2026-06-05T19:34:44+03:00",
-      "files": [
-        {
-          "paths": [
-            ".github/workflows/ci.yml"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "dd64e0a",
-      "subject": "ci: run node jobs on node 24"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "0bb21bb9064e6f82eeda9ff0075f63c17749f594",
-      "date": "2026-06-06T16:33:30+03:00",
-      "files": [
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/main.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "0bb21bb",
-      "subject": "perf: use mimalloc allocator and max-optimize release builds"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "7d9e0ef5b05eac3f986ccb23b2534e7d451a103e",
-      "date": "2026-06-06T17:17:31+03:00",
-      "files": [
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "README.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/diagnostics.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/screenshot.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "7d9e0ef",
-      "subject": "fix: gnome-screenshot fallback for background screenshot capture (#20) (#22)"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "4b4753f71276ae5fb07c5f341ce154e9195f2ec3",
-      "date": "2026-06-06T17:20:51+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "package.json"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "4b4753f",
-      "subject": "release: v0.2.6"
-    },
-    {
-      "author": "Ivan D Vasin",
-      "commit": "a0c5da2764a2890021c5b0ef9e7c535a681374e7",
-      "date": "2026-06-16T01:08:19+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "README.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/bin/codex-computer-use-cosmic.rs",
-            "src/bin/computer-use-linux-cosmic.rs"
-          ],
-          "status": "R100"
-        },
-        {
-          "paths": [
-            "src/cosmic_helper.rs"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "a0c5da2",
-      "subject": "Sync generic desktop-control backend fixes (#25)"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "6e0376a880dd034c05c9d29f700213c82f772d11",
-      "date": "2026-06-16T01:12:58+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "package.json"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "6e0376a",
-      "subject": "release: v0.2.7"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "f5c0951bc4500cd4f84fb8031cc773ab9ebc6adf",
-      "date": "2026-06-17T00:28:37+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "package.json"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "f5c0951",
-      "subject": "release: v0.2.8"
-    },
-    {
-      "author": "dependabot[bot]",
-      "commit": "fb3767624c1214bb6e7d30f7fa3a1acabc3a8401",
-      "date": "2026-06-17T01:10:34+03:00",
-      "files": [
-        {
-          "paths": [
-            "scripts/zod-check/package-lock.json"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "fb37676",
-      "subject": "chore(deps): bump hono (#30)"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "2ad1b6d67b1653dadc34fa9e6454658f3ff3ff86",
-      "date": "2026-06-22T01:49:50+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/atspi_tree.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "2ad1b6d",
-      "subject": "fix: read GTK4 a11y trees by pinning proxy destination (#31) (#32)"
-    },
-    {
-      "author": "Avi Fenesh",
-      "commit": "7500f375f3a7f115c8820917be8271b48abb2563",
-      "date": "2026-06-22T01:51:27+03:00",
-      "files": [
-        {
-          "paths": [
-            "CHANGELOG.md"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.lock"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "Cargo.toml"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "package.json"
-          ],
-          "status": "M"
-        },
-        {
-          "paths": [
-            "src/server.rs"
-          ],
-          "status": "M"
-        }
-      ],
-      "short_commit": "7500f37",
-      "subject": "release: v0.2.9"
-    },
+  "changed_paths": [
+    "docs/agent_docs/commit_dossier.json",
+    "docs/agent_docs/commit_dossier.md",
+    "docs/agent_docs/doc_status.json",
+    "docs/agent_docs/running_tests.md",
+    "docs/architecture.md",
+    "docs/fileindex.md"
+  ],
+  "commits": [
     {
       "author": "Bryan",
-      "commit": "25e47308ac972e151d8a3e233d02c531ccb38904",
-      "date": "2026-06-22T08:36:41-07:00",
+      "commit": "ac3884ed5465ab46a68e9988bce4fe23eb331f13",
+      "date": "2026-06-24T03:47:14-04:00",
       "files": [
         {
           "paths": [
-            "AGENTS.md"
+            "docs/agent_docs/commit_dossier.json"
           ],
           "status": "A"
         },
         {
           "paths": [
-            "CLAUDE.md"
+            "docs/agent_docs/commit_dossier.md"
           ],
           "status": "A"
         },
         {
           "paths": [
-            "docs/agent_docs/agents_md_status.json"
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
           ],
           "status": "A"
         }
       ],
-      "short_commit": "25e4730",
-      "subject": "Refresh AGENTS.md"
+      "short_commit": "ac3884e",
+      "subject": "Sync repo docs"
     }
   ],
+  "docs_current_through": {
+    "commit": "25e47308ac972e151d8a3e233d02c531ccb38904",
+    "date": "2026-06-22T08:36:41-07:00"
+  },
+  "from_commit": "25e47308ac972e151d8a3e233d02c531ccb38904",
+  "generated_at": "2026-06-25T05:32:26+00:00",
+  "head": {
+    "commit": "ac3884ed5465ab46a68e9988bce4fe23eb331f13",
+    "date": "2026-06-24T03:47:14-04:00",
+    "short_commit": "ac3884e"
+  },
+  "mode": "delta",
+  "recent_commits": [],
   "repo": "/home/bryan/code/computer-use-linux",
-  "to_commit": "25e47308ac972e151d8a3e233d02c531ccb38904",
+  "to_commit": "ac3884ed5465ab46a68e9988bce4fe23eb331f13",
   "worktree_dirty": true
 }
