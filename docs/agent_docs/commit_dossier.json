@@ -10,64 +10,64 @@
   "commits": [
     {
       "author": "Bryan",
-      "commit": "ac3884ed5465ab46a68e9988bce4fe23eb331f13",
-      "date": "2026-06-24T03:47:14-04:00",
+      "commit": "69019610e32d753cc922c38715dba42e71cb6438",
+      "date": "2026-06-25T01:33:36-04:00",
       "files": [
         {
           "paths": [
             "docs/agent_docs/commit_dossier.json"
           ],
-          "status": "A"
+          "status": "M"
         },
         {
           "paths": [
             "docs/agent_docs/commit_dossier.md"
           ],
-          "status": "A"
+          "status": "M"
         },
         {
           "paths": [
             "docs/agent_docs/doc_status.json"
           ],
-          "status": "A"
+          "status": "M"
         },
         {
           "paths": [
             "docs/agent_docs/running_tests.md"
           ],
-          "status": "A"
+          "status": "M"
         },
         {
           "paths": [
             "docs/architecture.md"
           ],
-          "status": "A"
+          "status": "M"
         },
         {
           "paths": [
             "docs/fileindex.md"
           ],
-          "status": "A"
+          "status": "M"
         }
       ],
-      "short_commit": "ac3884e",
+      "short_commit": "6901961",
       "subject": "Sync repo docs"
     }
   ],
   "docs_current_through": {
-    "commit": "25e47308ac972e151d8a3e233d02c531ccb38904",
-    "date": "2026-06-22T08:36:41-07:00"
-  },
-  "from_commit": "25e47308ac972e151d8a3e233d02c531ccb38904",
-  "generated_at": "2026-06-25T05:32:26+00:00",
-  "head": {
     "commit": "ac3884ed5465ab46a68e9988bce4fe23eb331f13",
-    "date": "2026-06-24T03:47:14-04:00",
-    "short_commit": "ac3884e"
+    "date": "2026-06-24T03:47:14-04:00"
+  },
+  "from_commit": "ac3884ed5465ab46a68e9988bce4fe23eb331f13",
+  "generated_at": "2026-06-27T04:25:55+00:00",
+  "head": {
+    "commit": "69019610e32d753cc922c38715dba42e71cb6438",
+    "date": "2026-06-25T01:33:36-04:00",
+    "short_commit": "6901961"
   },
   "mode": "delta",
   "recent_commits": [],
   "repo": "/home/bryan/code/computer-use-linux",
-  "to_commit": "ac3884ed5465ab46a68e9988bce4fe23eb331f13",
+  "to_commit": "69019610e32d753cc922c38715dba42e71cb6438",
   "worktree_dirty": true
 }
