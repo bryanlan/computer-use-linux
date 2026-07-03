@@ -167,7 +167,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c77886257be21c9cd89a4ae7e64860c6f0eefca799bb79127913052bd0eefb3d"
 dependencies = [
  "atspi-common",
- "atspi-connection",
  "atspi-proxies",
  "zbus",
 ]
@@ -314,10 +313,11 @@ dependencies = [
 
 [[package]]
 name = "computer-use-linux"
-version = "0.2.10"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "atspi",
+ "atspi-connection",
  "base64",
  "cosmic-protocols",
  "evdev",
@@ -1432,7 +1432,6 @@ version = "1.23.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ddd74a9687298c6858e9b88ec8935ec45d22e8fd5e6394fa1bd4e99a87789c76"
 dependencies = [
- "getrandom",
  "js-sys",
  "serde_core",
  "wasm-bindgen",

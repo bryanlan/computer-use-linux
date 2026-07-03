@@ -56,12 +56,15 @@ Screenshot payloads are size-bounded by default before they are returned to the 
 - `press_key` — keys / chords; can focus a window or terminal first
 - `type_text` — literal text input, optionally targeted at a window or terminal
 
+Targeted `press_key`/`type_text` results append focused-element feedback from AT-SPI (role, name, editable) and warn when no editable element holds focus. Click/screenshot/input results warn when the target window or coordinate is partially or fully off-screen. `get_app_state` returns a compact readiness block by default; pass `verbose: true` for the full diagnostics report.
+
 **Semantic actions**
 - `perform_action` — invoke any AT-SPI action exposed by an element (`Press`, `Activate`, `Toggle`, …); defaults to the primary action
 - `set_value` — write to a settable accessibility element (text fields, sliders, spinners)
 
 **Navigation**
 - `activate_window` — focus a window by `window_id`, `pid`, `app_id`, `wm_class`, `title`, or terminal selectors
+- `move_window` / `resize_window` — reposition or resize a window in desktop coordinates (GNOME Shell extension backend); useful to recover windows that are partially off-screen
 
 ### MCP safety contract
 
@@ -71,7 +74,7 @@ Screenshot payloads are size-bounded by default before they are returned to the 
 | --- | --- | --- |
 | Read-only observation | `doctor`, `list_apps`, `list_windows`, `focused_window`, `get_app_state` | `readOnlyHint=true`; may reveal app, window, accessibility, and screenshot contents. `get_app_state` may trigger the desktop screenshot portal prompt. |
 | Local setup mutators | `setup_accessibility`, `setup_window_targeting` | `readOnlyHint=false`, `destructiveHint=false`, `idempotentHint=true`; modifies user desktop configuration by enabling accessibility or installing/enabling the GNOME window-targeting extension. |
-| UI state mutators | `activate_window`, `scroll`, `screenshot` | `readOnlyHint=false`, `destructiveHint=false`; changes focus or scroll position in the live desktop, or raises a window to capture it. |
+| UI state mutators | `activate_window`, `move_window`, `resize_window`, `scroll`, `screenshot` | `readOnlyHint=false`, `destructiveHint=false`; changes focus, geometry, or scroll position in the live desktop, or raises a window to capture it. |
 | Desktop action mutators | `click`, `drag`, `press_key`, `type_text`, `perform_action`, `set_value` | `readOnlyHint=false`, `destructiveHint=true`, `openWorldHint=true`; can trigger arbitrary actions in whatever local application is targeted. |
 
 Annotations are safety hints, not an authorization system. MCP hosts should still ask the user before calls that could submit, delete, send, purchase, overwrite, or otherwise commit state.

@@ -23,6 +23,8 @@ EXPECTED_TOOLS = {
     "focused_window",
     "screenshot",
     "activate_window",
+    "move_window",
+    "resize_window",
     "click",
     "drag",
     "scroll",
@@ -103,6 +105,8 @@ IDEMPOTENT_TOOLS = READ_ONLY_TOOLS | {
     "setup_accessibility",
     "setup_window_targeting",
     "activate_window",
+    "move_window",
+    "resize_window",
 }
 
 OPEN_WORLD_TOOLS = EXPECTED_TOOLS - {
