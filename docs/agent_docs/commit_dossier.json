@@ -1,17 +1,305 @@
 {
   "changed_paths": [
+    ".cargo/audit.toml",
+    "CHANGELOG.md",
+    "Cargo.lock",
+    "Cargo.toml",
+    "README.md",
     "docs/agent_docs/commit_dossier.json",
     "docs/agent_docs/commit_dossier.md",
     "docs/agent_docs/doc_status.json",
     "docs/agent_docs/running_tests.md",
     "docs/architecture.md",
-    "docs/fileindex.md"
+    "docs/fileindex.md",
+    "examples/atspi_probe.rs",
+    "gnome-shell-extension/computer-use-linux@avifenesh.dev/extension.js",
+    "gnome-shell-extension/computer-use-linux@avifenesh.dev/metadata.json",
+    "install.sh",
+    "package.json",
+    "scripts/mcp_safety_check.py",
+    "src/atspi_tree.rs",
+    "src/cli.rs",
+    "src/lib.rs",
+    "src/main.rs",
+    "src/server.rs",
+    "src/windowing/backends/gnome.rs",
+    "tests/library_exports.rs"
   ],
   "commits": [
     {
+      "author": "Yo_DDV",
+      "commit": "f9b17baee8074b181e4283e8cbff116fd0d6936b",
+      "date": "2026-06-29T19:10:56+03:00",
+      "files": [
+        {
+          "paths": [
+            "CHANGELOG.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "Cargo.lock"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "Cargo.toml"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "package.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "src/cli.rs"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "src/lib.rs"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "src/main.rs"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "src/server.rs"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "tests/library_exports.rs"
+          ],
+          "status": "A"
+        }
+      ],
+      "short_commit": "f9b17ba",
+      "subject": "Expose library crate modules (#35)"
+    },
+    {
+      "author": "Avi Fenesh",
+      "commit": "298c4c4abb8394ff5c866f119e15a4e29771f7c9",
+      "date": "2026-07-03T20:07:09+03:00",
+      "files": [
+        {
+          "paths": [
+            ".cargo/audit.toml"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "Cargo.lock"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "Cargo.toml"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "README.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "examples/atspi_probe.rs"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "gnome-shell-extension/computer-use-linux@avifenesh.dev/extension.js"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "gnome-shell-extension/computer-use-linux@avifenesh.dev/metadata.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "package.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "scripts/mcp_safety_check.py"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "src/atspi_tree.rs"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "src/lib.rs"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "src/server.rs"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "src/windowing/backends/gnome.rs"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "298c4c4",
+      "subject": "release: v0.3.0 \u2014 input-landing feedback, off-screen detection, window geometry tools"
+    },
+    {
+      "author": "Avi Fenesh",
+      "commit": "57093a1931728e2012b0bff0480a3a1ae4fc5f38",
+      "date": "2026-07-03T21:22:50+03:00",
+      "files": [
+        {
+          "paths": [
+            "Cargo.lock"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "Cargo.toml"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "package.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "src/server.rs"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "57093a1",
+      "subject": "release: v0.3.1 \u2014 window-targeted scroll defaults to the target window centre"
+    },
+    {
+      "author": "Tim Richardson",
+      "commit": "9f2f4f1f62bf9f6c328bc5d34b15f128ed94b0e1",
+      "date": "2026-07-04T15:22:08+03:00",
+      "files": [
+        {
+          "paths": [
+            "install.sh"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "9f2f4f1",
+      "subject": "Fix GNOME extension package bootstrap on Ubuntu (#40)"
+    },
+    {
       "author": "Bryan",
-      "commit": "4970cf7d2b15a2005f0bd8d453babad1cc66e6a4",
-      "date": "2026-07-03T00:36:58-04:00",
+      "commit": "f3187d5a4cad8096b0c0208e377581407d5922b6",
+      "date": "2026-07-05T08:34:07-04:00",
+      "files": [
+        {
+          "paths": [
+            "AGENTS.md"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "CLAUDE.md"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/agents_md_status.json"
+          ],
+          "status": "A"
+        }
+      ],
+      "short_commit": "f3187d5",
+      "subject": "Refresh AGENTS.md"
+    },
+    {
+      "author": "Bryan",
+      "commit": "47bae8a980b09e737ddc7e701345967b587b2e7a",
+      "date": "2026-07-05T08:34:07-04:00",
+      "files": [
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.json"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.md"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "A"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
+          ],
+          "status": "A"
+        }
+      ],
+      "short_commit": "47bae8a",
+      "subject": "Sync repo docs"
+    },
+    {
+      "author": "Bryan",
+      "commit": "6f69ecce7163d38e9093d40eda86992e6732b166",
+      "date": "2026-07-05T08:34:07-04:00",
       "files": [
         {
           "paths": [
@@ -50,24 +338,294 @@
           "status": "M"
         }
       ],
-      "short_commit": "4970cf7",
+      "short_commit": "6f69ecc",
+      "subject": "Sync repo docs"
+    },
+    {
+      "author": "Bryan",
+      "commit": "5f2f2697574c6b21e90e1042e3bf16b19b751b6b",
+      "date": "2026-07-05T08:34:07-04:00",
+      "files": [
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "5f2f269",
+      "subject": "Sync repo docs"
+    },
+    {
+      "author": "Bryan",
+      "commit": "3eab629db742c8dbddebc5f094e35d0f288113cb",
+      "date": "2026-07-05T08:34:07-04:00",
+      "files": [
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "3eab629",
+      "subject": "Sync repo docs"
+    },
+    {
+      "author": "Bryan",
+      "commit": "caee0607081dfbc96370e8d4bf0cd1302aa42162",
+      "date": "2026-07-05T08:34:07-04:00",
+      "files": [
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "caee060",
+      "subject": "Sync repo docs"
+    },
+    {
+      "author": "Bryan",
+      "commit": "1726a942946852ac2963bf03f6fb79d95a20be95",
+      "date": "2026-07-05T08:34:07-04:00",
+      "files": [
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "1726a94",
+      "subject": "Sync repo docs"
+    },
+    {
+      "author": "Bryan",
+      "commit": "6a9346e2af4b6ea76054a6364e8b0733500382c3",
+      "date": "2026-07-05T08:34:07-04:00",
+      "files": [
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "6a9346e",
+      "subject": "Sync repo docs"
+    },
+    {
+      "author": "Bryan",
+      "commit": "3c67f42cb99f6b6ac67165e9ef7ea82f15861a95",
+      "date": "2026-07-05T08:34:08-04:00",
+      "files": [
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/commit_dossier.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/doc_status.json"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/agent_docs/running_tests.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/architecture.md"
+          ],
+          "status": "M"
+        },
+        {
+          "paths": [
+            "docs/fileindex.md"
+          ],
+          "status": "M"
+        }
+      ],
+      "short_commit": "3c67f42",
       "subject": "Sync repo docs"
     }
   ],
   "docs_current_through": {
-    "commit": "17778b233b279d61817e182b21c20f953c20f6e2",
-    "date": "2026-07-02T00:31:45-04:00"
-  },
-  "from_commit": "17778b233b279d61817e182b21c20f953c20f6e2",
-  "generated_at": "2026-07-04T05:06:32+00:00",
-  "head": {
     "commit": "4970cf7d2b15a2005f0bd8d453babad1cc66e6a4",
-    "date": "2026-07-03T00:36:58-04:00",
-    "short_commit": "4970cf7"
+    "date": "2026-07-03T00:36:58-04:00"
+  },
+  "from_commit": "4970cf7d2b15a2005f0bd8d453babad1cc66e6a4",
+  "generated_at": "2026-07-06T04:24:02+00:00",
+  "head": {
+    "commit": "3c67f42cb99f6b6ac67165e9ef7ea82f15861a95",
+    "date": "2026-07-05T08:34:08-04:00",
+    "short_commit": "3c67f42"
   },
   "mode": "delta",
   "recent_commits": [],
   "repo": "/home/bryan/code/computer-use-linux",
-  "to_commit": "4970cf7d2b15a2005f0bd8d453babad1cc66e6a4",
+  "to_commit": "3c67f42cb99f6b6ac67165e9ef7ea82f15861a95",
   "worktree_dirty": true
 }
