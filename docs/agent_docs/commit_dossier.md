@@ -1,11 +1,11 @@
 # Commit Dossier
 
 - Repository: `/home/bryan/code/computer-use-linux`
-- Generated at: `2026-07-10T04:18:41+00:00`
-- Repo HEAD: `11d6d0775889de500ad5091d0918897cd9d326c2` (2026-07-09T00:46:24-04:00)
+- Generated at: `2026-07-11T04:44:24+00:00`
+- Repo HEAD: `e0df0bd59dc4bd657034508e98c4007f9e80958a` (2026-07-10T00:20:01-04:00)
 - Worktree dirty: `true`
-- Docs current through: `69546c5a515503119624987ff97f3973a0954641`
-- Docs current through date: `2026-07-07T00:28:57-04:00`
+- Docs current through: `11d6d0775889de500ad5091d0918897cd9d326c2`
+- Docs current through date: `2026-07-09T00:46:24-04:00`
 
 ## Changed Paths Since Docs Baseline
 
@@ -18,9 +18,9 @@
 
 ## Commits Since Docs Baseline
 
-### 11d6d07 Sync repo docs
+### e0df0bd Sync repo docs
 
-- Date: `2026-07-09T00:46:24-04:00`
+- Date: `2026-07-10T00:20:01-04:00`
 - Author: `Bryan`
 - Files:
   - `M` `docs/agent_docs/commit_dossier.json`
