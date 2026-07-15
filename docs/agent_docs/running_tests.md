@@ -1,8 +1,8 @@
 ---
 doc_type: running_tests
 managed_by: sync-repo-docs
-current_through_commit: e0df0bd59dc4bd657034508e98c4007f9e80958a
-current_through_date: 2026-07-10T00:20:01-04:00
+current_through_commit: 45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777
+current_through_date: 2026-07-11T00:44:24-04:00
 ---
 
 # Running Tests
@@ -16,9 +16,18 @@ current_through_date: 2026-07-10T00:20:01-04:00
 - `agnix .` - upstream full gate when `agnix` is installed; the current local environment may not
   provide this command.
 
+On 2026-07-14, format, locked all-target check, and warning-denying clippy passed. The full test run
+passed 128 tests but failed four Unix-datagram socket fixture tests because the unattended sandbox
+rejects `bind(2)` with `EPERM`; rerunning with only those four named tests skipped passed all 128
+remaining tests. The MCP safety check passed all 18 advertised tools, and both npm wrapper files
+passed `node --check`.
+
 ## Targeted Test Patterns
 - Fast compile check: `cargo check --locked`
 - Rust unit/integration tests: `cargo test --locked`
+- Sandbox-safe Rust signal: run the full command first; if and only if disposable Unix datagram
+  sockets fail with `EPERM`, rerun with the four exact socket tests reported on 2026-07-14 skipped.
+  Do not interpret that filtered run as coverage of socket selection itself.
 - MCP safety contract only: `scripts/mcp_safety_check.py`
 - npm wrapper syntax/packaging: `node --check npm/install.js`, `node --check npm/bin/computer-use-linux.js`, `npm pack --dry-run`
 - Release dry-runs: `cargo publish --dry-run --locked` and `npm pack --dry-run`
@@ -43,6 +52,9 @@ current_through_date: 2026-07-10T00:20:01-04:00
   desktop configuration changes.
 - Screenshot and window tests can depend on foreground/background process context, portal prompts,
   and compositor-specific permissions.
+- Some restricted sandboxes prohibit binding Unix datagram sockets even under a temporary
+  directory. That makes the four ydotool socket-fixture tests fail before their assertions run; it
+  is an environment limitation, not a reason to weaken the socket code or tests.
 - On GNOME Wayland, the extension backend may require logout/login after installation before exact
   window targeting works.
 - COSMIC packaging changes must keep the helper binary next to the main binary or set

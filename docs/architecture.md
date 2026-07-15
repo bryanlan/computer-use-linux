@@ -1,8 +1,8 @@
 ---
 doc_type: architecture
 managed_by: sync-repo-docs
-current_through_commit: e0df0bd59dc4bd657034508e98c4007f9e80958a
-current_through_date: 2026-07-10T00:20:01-04:00
+current_through_commit: 45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777
+current_through_date: 2026-07-11T00:44:24-04:00
 ---
 
 # Architecture
@@ -89,3 +89,7 @@ Use `docs/agent_docs/running_tests.md` for safe verification commands. This repo
 desktop: commands such as `computer-use-linux setup`, `setup-window-targeting`, MCP mutating tools,
 and input/screenshot operations can reveal or change local GUI state and should not be treated as
 ordinary tests.
+
+The central Waltium repo registry does not register this checkout. The code is a runnable desktop-
+control project, but its presence and package/release configuration do not establish that Waltium
+currently deploys or operates it as an active runtime.

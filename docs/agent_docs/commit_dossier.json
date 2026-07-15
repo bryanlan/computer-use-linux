@@ -10,8 +10,8 @@
   "commits": [
     {
       "author": "Bryan",
-      "commit": "e0df0bd59dc4bd657034508e98c4007f9e80958a",
-      "date": "2026-07-10T00:20:01-04:00",
+      "commit": "45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777",
+      "date": "2026-07-11T00:44:24-04:00",
       "files": [
         {
           "paths": [
@@ -50,24 +50,24 @@
           "status": "M"
         }
       ],
-      "short_commit": "e0df0bd",
+      "short_commit": "45de28f",
       "subject": "Sync repo docs"
     }
   ],
   "docs_current_through": {
-    "commit": "11d6d0775889de500ad5091d0918897cd9d326c2",
-    "date": "2026-07-09T00:46:24-04:00"
-  },
-  "from_commit": "11d6d0775889de500ad5091d0918897cd9d326c2",
-  "generated_at": "2026-07-11T04:44:24+00:00",
-  "head": {
     "commit": "e0df0bd59dc4bd657034508e98c4007f9e80958a",
-    "date": "2026-07-10T00:20:01-04:00",
-    "short_commit": "e0df0bd"
+    "date": "2026-07-10T00:20:01-04:00"
+  },
+  "from_commit": "e0df0bd59dc4bd657034508e98c4007f9e80958a",
+  "generated_at": "2026-07-14T12:59:56+00:00",
+  "head": {
+    "commit": "45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777",
+    "date": "2026-07-11T00:44:24-04:00",
+    "short_commit": "45de28f"
   },
   "mode": "delta",
   "recent_commits": [],
   "repo": "/home/bryan/code/computer-use-linux",
-  "to_commit": "e0df0bd59dc4bd657034508e98c4007f9e80958a",
+  "to_commit": "45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777",
   "worktree_dirty": true
 }
