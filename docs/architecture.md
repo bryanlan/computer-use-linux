@@ -1,10 +1,3 @@
----
-doc_type: architecture
-managed_by: sync-repo-docs
-current_through_commit: 45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777
-current_through_date: 2026-07-11T00:44:24-04:00
----
-
 # Architecture
 
 ## System Overview
@@ -15,7 +8,8 @@ The repository also ships a Node/npm wrapper, a GNOME Shell extension for exact 
 window targeting, a COSMIC helper binary, and an agent-facing Hermes skill.
 
 First-class runtime surfaces:
-- `src/main.rs` is the Rust CLI entrypoint for `mcp`, `doctor`, `setup`, `setup-window-targeting`,
+- `src/main.rs` calls the library entrypoint in `src/lib.rs`; `src/cli.rs` owns dispatch for
+  `mcp`, `doctor`, `setup`, `setup-window-targeting`,
   app/window/state/screenshot commands, and hidden development probes.
 - `src/server.rs` is the MCP tool surface. It defines the tool handlers, input/output schemas, and
   MCP safety annotations that distinguish read-only observation from mutating desktop actions.
@@ -81,8 +75,6 @@ the wrapper sets `COMPUTER_USE_LINUX_COSMIC_HELPER` when the helper is bundled.
 - `doctor` is the canonical structured readiness surface and should remain machine-readable.
 - The COSMIC helper is part of the runtime package and must ship with install-script, Cargo, and npm
   flows.
-- Managed docs are synchronized against the live tree and finalized to the current git `HEAD`;
-  commit dossier files are navigation context, not source of truth.
 
 ## Operational Notes
 Use `docs/agent_docs/running_tests.md` for safe verification commands. This repo controls the live

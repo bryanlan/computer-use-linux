@@ -1,10 +1,3 @@
----
-doc_type: running_tests
-managed_by: sync-repo-docs
-current_through_commit: 45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777
-current_through_date: 2026-07-11T00:44:24-04:00
----
-
 # Running Tests
 
 ## Primary Commands
@@ -16,17 +9,11 @@ current_through_date: 2026-07-11T00:44:24-04:00
 - `agnix .` - upstream full gate when `agnix` is installed; the current local environment may not
   provide this command.
 
-On 2026-07-14, format, locked all-target check, and warning-denying clippy passed. The full test run
-passed 128 tests but failed four Unix-datagram socket fixture tests because the unattended sandbox
-rejects `bind(2)` with `EPERM`; rerunning with only those four named tests skipped passed all 128
-remaining tests. The MCP safety check passed all 18 advertised tools, and both npm wrapper files
-passed `node --check`.
-
 ## Targeted Test Patterns
 - Fast compile check: `cargo check --locked`
 - Rust unit/integration tests: `cargo test --locked`
 - Sandbox-safe Rust signal: run the full command first; if and only if disposable Unix datagram
-  sockets fail with `EPERM`, rerun with the four exact socket tests reported on 2026-07-14 skipped.
+  sockets fail with `EPERM`, rerun with the exact socket fixture tests named by that failing run skipped.
   Do not interpret that filtered run as coverage of socket selection itself.
 - MCP safety contract only: `scripts/mcp_safety_check.py`
 - npm wrapper syntax/packaging: `node --check npm/install.js`, `node --check npm/bin/computer-use-linux.js`, `npm pack --dry-run`
@@ -38,11 +25,14 @@ passed `node --check`.
 - Rust checks use the locked Cargo dependency graph in `Cargo.lock`.
 - The MCP safety check expects a built `target/debug/computer-use-linux` binary or an explicitly
   provided binary path, because it starts the MCP server and validates `tools/list` output.
+  Build that executable with `cargo build --locked --bin computer-use-linux` first;
+  `cargo check` does not produce it.
 - `computer-use-linux doctor` depends on the current Linux desktop session, session DBus,
   portals, AT-SPI, compositor APIs, `ydotoold`, and uinput permissions.
 - npm postinstall downloads GitHub release assets unless
-  `COMPUTER_USE_LINUX_SKIP_DOWNLOAD=1`, `COMPUTER_USE_LINUX_LOCAL_BINARY`, or
-  `COMPUTER_USE_LINUX_DOWNLOAD_BASE` is set.
+  `COMPUTER_USE_LINUX_SKIP_DOWNLOAD=1` is set or `COMPUTER_USE_LINUX_LOCAL_BINARY`
+  supplies a local binary. `COMPUTER_USE_LINUX_DOWNLOAD_BASE` changes the download
+  endpoint rather than disabling downloads.
 - `agnix .` requires the external `agnix` CLI; it is not installed in every development
   environment.
 

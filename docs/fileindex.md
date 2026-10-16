@@ -1,10 +1,3 @@
----
-doc_type: fileindex
-managed_by: sync-repo-docs
-current_through_commit: 45de28fbe8ec8491b3d6ca13bc1bc6d833f5b777
-current_through_date: 2026-07-11T00:44:24-04:00
----
-
 # File Index
 
 ## Top-Level Layout
@@ -15,7 +8,7 @@ current_through_date: 2026-07-11T00:44:24-04:00
 - `npm/` - npm wrapper, postinstall binary downloader, and npm package docs.
 - `skills/` - packaged Hermes skill for safe MCP server setup and desktop-control procedure.
 - `scripts/` - safety/contract checks and auxiliary Node schema tooling.
-- `docs/` - managed repo docs and doc-sync metadata.
+- `docs/` - architecture and verification guidance.
 
 ## Key Directories
 - `src/windowing/backends/` - GNOME, KWin, Hyprland, i3, and COSMIC backend implementations.
@@ -32,7 +25,9 @@ current_through_date: 2026-07-11T00:44:24-04:00
 - `CLAUDE.md` - symlink to `AGENTS.md`.
 - `Cargo.toml` and `Cargo.lock` - Rust crate metadata, binary declarations, and locked dependency graph.
 - `package.json` - npm wrapper package metadata and packaging scripts.
-- `src/main.rs` - CLI command dispatcher and MCP entrypoint.
+- `src/main.rs` - binary entrypoint calling the shared library.
+- `src/lib.rs` - public accessibility, diagnostics, screenshot, and CLI library boundary.
+- `src/cli.rs` - CLI command dispatcher and MCP startup.
 - `src/server.rs` - MCP tool definitions, annotations, schemas, and handler logic.
 - `src/diagnostics.rs` - `doctor` readiness/capability report and setup reporting.
 - `src/screenshot.rs` - screenshot backend chain, payload caps, compression, and coordinate metadata.
