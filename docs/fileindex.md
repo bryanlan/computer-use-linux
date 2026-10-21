@@ -22,7 +22,6 @@
 ## Key Files
 - `README.md` - product overview, install paths, support matrix, MCP tool list, and safety contract.
 - `AGENTS.md` - repo guardrails for live desktop-control software.
-- `CLAUDE.md` - symlink to `AGENTS.md`.
 - `Cargo.toml` and `Cargo.lock` - Rust crate metadata, binary declarations, and locked dependency graph.
 - `package.json` - npm wrapper package metadata and packaging scripts.
 - `src/main.rs` - binary entrypoint calling the shared library.
