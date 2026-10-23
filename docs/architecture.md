@@ -2,8 +2,9 @@
 
 ## System Overview
 `computer-use-linux` is a Rust MCP server and CLI for observing and controlling a live Linux
-desktop. It exposes AT-SPI accessibility trees, bounded screenshots, compositor-aware window
-listing/focusing, and input synthesis through both an MCP stdio server and a local debugging CLI.
+desktop. The MCP stdio server exposes AT-SPI accessibility trees, bounded screenshots,
+compositor-aware window listing/focusing, and input synthesis. The CLI provides readiness,
+setup, and observation commands, plus a hidden, mutating `abs-test` click probe for development.
 The repository also ships a Node/npm wrapper, a GNOME Shell extension for exact GNOME Wayland
 window targeting, a COSMIC helper binary, and an agent-facing Hermes skill.
 
@@ -17,7 +18,7 @@ First-class runtime surfaces:
   both humans and MCP hosts.
 - `src/windowing/` owns compositor-specific window backends for GNOME, KWin, Hyprland, i3, and
   COSMIC.
-- `npm/` packages prebuilt binaries and exposes the npm wrapper.
+- `npm/` downloads prebuilt binaries during installation and exposes the npm wrapper.
 - `gnome-shell-extension/computer-use-linux@avifenesh.dev/` exposes a GNOME Shell DBus service for
   exact window list/focus behavior when native introspection is locked down.
 
@@ -28,8 +29,8 @@ First-class runtime surfaces:
   fallback, then downscales/compresses payloads within MCP-safe byte and dimension caps.
 - `src/remote_desktop.rs` implements portal pointer/keyboard sessions and key/text input support.
 - `src/abs_pointer.rs` provides the uinput absolute-pointer backend used for coordinate actions.
-- `src/windows.rs` and `src/windowing/` resolve, list, and focus desktop windows with per-backend
-  failure explanations.
+- `src/windowing/target.rs` and `src/windowing/registry.rs` resolve, list, and focus desktop windows
+  with per-backend failure explanations.
 - `src/cosmic_helper.rs` and `src/bin/computer-use-linux-cosmic.rs` support COSMIC Wayland window
   control.
 - `install.sh` installs system packages, Rust binaries, `ydotoold`, GNOME AT-SPI settings, and the
@@ -43,8 +44,9 @@ First-class runtime surfaces:
 For MCP use, a host starts `computer-use-linux mcp`; `serve_mcp` creates the `ComputerUseLinux`
 server and exposes annotated tools through the `rmcp` stdio transport. Read-only tools call the
 diagnostics, windowing, AT-SPI, and screenshot modules and return JSON or bounded image payloads.
-Mutating tools first resolve a target through window, element, or coordinate selectors, then invoke
-portal input, `ydotool`, uinput absolute-pointer actions, or AT-SPI semantic actions.
+Desktop input tools resolve window, element, or coordinate targets when supplied, then invoke
+portal input, KDE clipboard integration, `ydotool`, uinput absolute-pointer actions, or AT-SPI
+semantic actions.
 
 The CLI uses the same modules directly. `doctor` hydrates desktop session environment, probes
 portals, AT-SPI, window backends, and input backends, and returns a single readiness JSON document.
@@ -60,6 +62,7 @@ the wrapper sets `COMPUTER_USE_LINUX_COSMIC_HELPER` when the helper is bundled.
 - `org.freedesktop.portal.RemoteDesktop`, screenshot/screencast portals, GNOME Shell DBus
   screenshot APIs, and `gnome-screenshot` fallback.
 - `ydotoold` and uinput for keyboard/pointer synthesis.
+- KDE Klipper DBus clipboard service for Plasma Wayland text input.
 - GNOME Shell extension DBus service, GNOME Shell Introspect, KWin scripting, `hyprctl`, `i3-msg`,
   and the COSMIC helper for window listing/focus.
 - crates.io, npm, and GitHub release assets for distribution.
@@ -81,7 +84,3 @@ Use `docs/agent_docs/running_tests.md` for safe verification commands. This repo
 desktop: commands such as `computer-use-linux setup`, `setup-window-targeting`, MCP mutating tools,
 and input/screenshot operations can reveal or change local GUI state and should not be treated as
 ordinary tests.
-
-The central Waltium repo registry does not register this checkout. The code is a runnable desktop-
-control project, but its presence and package/release configuration do not establish that Waltium
-currently deploys or operates it as an active runtime.

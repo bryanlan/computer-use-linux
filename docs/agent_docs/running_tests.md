@@ -6,20 +6,21 @@
 - `cargo clippy --locked --all-targets -- -D warnings`
 - `cargo test --locked --no-fail-fast`
 - `scripts/mcp_safety_check.py`
-- `agnix .` - upstream full gate when `agnix` is installed; the current local environment may not
-  provide this command.
+- `agnix .` - agent configuration lint used by CI; requires the external `agnix` CLI.
 
 ## Targeted Test Patterns
 - Fast compile check: `cargo check --locked`
 - Rust unit/integration tests: `cargo test --locked`
-- Sandbox-safe Rust signal: run the full command first; if and only if disposable Unix datagram
-  sockets fail with `EPERM`, rerun with the exact socket fixture tests named by that failing run skipped.
+- Public library export check: `cargo test --locked --test library_exports`
+- Sandbox-safe Rust signal: run the full command first; if and only if disposable Unix stream or
+  datagram sockets fail with `EPERM`, rerun with the exact socket fixture tests named by that failing run skipped.
   Do not interpret that filtered run as coverage of socket selection itself.
 - MCP safety contract only: `scripts/mcp_safety_check.py`
+- MCP SDK schema check: `node scripts/zod-check/check.mjs --command target/debug/computer-use-linux`
 - npm wrapper syntax/packaging: `node --check npm/install.js`, `node --check npm/bin/computer-use-linux.js`, `npm pack --dry-run`
 - Release dry-runs: `cargo publish --dry-run --locked` and `npm pack --dry-run`
-- Desktop readiness readback: `cargo run -- doctor` or `computer-use-linux doctor`; this is an
-  environment probe, not a hermetic unit test.
+- Desktop readiness readback: `cargo run --bin computer-use-linux -- doctor` or
+  `computer-use-linux doctor`; this is an environment probe, not a hermetic unit test.
 
 ## Environment and Fixtures
 - Rust checks use the locked Cargo dependency graph in `Cargo.lock`.
@@ -27,6 +28,9 @@
   provided binary path, because it starts the MCP server and validates `tools/list` output.
   Build that executable with `cargo build --locked --bin computer-use-linux` first;
   `cargo check` does not produce it.
+- The MCP SDK schema check also requires that executable and the Node dependencies from
+  `scripts/zod-check/package-lock.json`, installed with
+  `npm ci --prefix scripts/zod-check --ignore-scripts --no-audit --no-fund`.
 - `computer-use-linux doctor` depends on the current Linux desktop session, session DBus,
   portals, AT-SPI, compositor APIs, `ydotoold`, and uinput permissions.
 - npm postinstall downloads GitHub release assets unless
@@ -42,9 +46,9 @@
   desktop configuration changes.
 - Screenshot and window tests can depend on foreground/background process context, portal prompts,
   and compositor-specific permissions.
-- Some restricted sandboxes prohibit binding Unix datagram sockets even under a temporary
-  directory. That makes the four ydotool socket-fixture tests fail before their assertions run; it
-  is an environment limitation, not a reason to weaken the socket code or tests.
+- Some restricted sandboxes prohibit binding Unix stream or datagram sockets even under a temporary
+  directory. Affected ydotool socket-fixture tests fail before their assertions run; this is an
+  environment limitation, not a reason to weaken the socket code or tests.
 - On GNOME Wayland, the extension backend may require logout/login after installation before exact
   window targeting works.
 - COSMIC packaging changes must keep the helper binary next to the main binary or set

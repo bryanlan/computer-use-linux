@@ -8,6 +8,7 @@
 - `npm/` - npm wrapper, postinstall binary downloader, and npm package docs.
 - `skills/` - packaged Hermes skill for safe MCP server setup and desktop-control procedure.
 - `scripts/` - safety/contract checks and auxiliary Node schema tooling.
+- `tests/` - integration check for the public Rust library exports.
 - `docs/` - architecture and verification guidance.
 
 ## Key Directories
@@ -33,7 +34,9 @@
 - `src/remote_desktop.rs` - portal and key/text input paths.
 - `src/abs_pointer.rs` - uinput absolute-pointer backend.
 - `src/atspi_tree.rs` - accessibility tree, action, and value-setting implementation.
-- `src/windows.rs` and `src/windowing/registry.rs` - window target resolution and backend selection.
+- `src/windows.rs` - window API re-export.
+- `src/windowing/target.rs` and `src/windowing/registry.rs` - window target resolution and backend
+  selection.
 - `src/bin/computer-use-linux-cosmic.rs` - COSMIC helper binary.
 - `gnome-shell-extension/computer-use-linux@avifenesh.dev/extension.js` - GNOME Shell DBus window-control service.
 - `npm/install.js` - release binary download and sha256 verification.
@@ -46,7 +49,7 @@
   `skills/computer-use-linux/SKILL.md`, and `scripts/mcp_safety_check.py`.
 - Desktop readiness changes should review `src/diagnostics.rs`, `README.md`, and the relevant
   backend modules.
-- Window targeting changes should review `src/windows.rs`, `src/windowing/registry.rs`,
+- Window targeting changes should review `src/windowing/target.rs`, `src/windowing/registry.rs`,
   `src/windowing/backends/*`, and the GNOME extension or COSMIC helper when applicable.
 - Screenshot behavior changes should review `src/screenshot.rs`, `src/server.rs`, README payload
   guidance, and any tests around image sizing or metadata.
